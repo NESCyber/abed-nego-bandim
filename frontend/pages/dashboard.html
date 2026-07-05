@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard — Admin Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/admin.css">
+  <style>
+    /* ── FORCED NAVBAR FIX ── */
+    header#navbar,
+    header#navbar .navbar,
+    .navbar {
+      background-color: #0d2b1a !important;
+      background: #0d2b1a !important;
+    }
+    .navbar__inner {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      height: 70px !important;
+      max-width: 1140px !important;
+      margin: 0 auto !important;
+      padding: 0 20px !important;
+    }
+    .navbar__site-name { color: #ffffff !important; font-weight: 700 !important; }
+    .navbar__site-name span { color: #e8c97a !important; }
+    .navbar__links a { color: #ffffff !important; text-decoration: none !important; padding: 8px 14px !important; font-weight: 600 !important; }
+    .navbar__links a:hover { color: #e8c97a !important; }
+    .navbar__cta { background: #c9a84c !important; color: #0d2b1a !important; padding: 8px 18px !important; border-radius: 20px !important; font-weight: 700 !important; }
+    .navbar__logo { border-color: #c9a84c !important; color: #c9a84c !important; background: #1a4a2e !important; }
+    .navbar__hamburger span { background: #ffffff !important; }
+    .navbar__mobile-menu { background: #0d2b1a !important; }
+    .navbar__mobile-menu a { color: #ffffff !important; }
+  </style>
+</head>
+<body>
+<div class="admin-layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <div class="admin-main">
+    <div class="topbar" id="topbar"></div>
+    <div class="admin-content">
+      <h2 style="font-size:1.2rem;font-weight:700;margin-bottom:20px;">Dashboard Overview</h2>
+
+      <!-- ── Hero Background Image Manager ─────────────────────── -->
+      <div class="panel" style="margin-bottom:24px;">
+        <div class="panel__header">
+          <div class="panel__title">Homepage Hero Background</div>
+        </div>
+        <div style="padding:20px;">
+          <p style="font-size:0.88rem;color:var(--text-mid);margin-bottom:16px;">
+            Upload the MP's photo to display as the homepage hero background. The image will appear behind the welcome text.
+          </p>
+          <div id="heroAlert" class="alert" style="display:none;"></div>
+
+          <!-- Current preview -->
+          <div id="heroPreview" style="margin-bottom:16px;border-radius:var(--radius);overflow:hidden;max-width:600px;position:relative;background:#1a4a2e;">
+            <div id="heroPreviewInner" style="aspect-ratio:16/7;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.4);font-size:1.2rem;background:linear-gradient(135deg,#0d2b1a,#2d6a4f);">
+              No hero image set — using default green gradient
+            </div>
+          </div>
+
+          <!-- Upload controls -->
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <input type="file" id="heroFileInput" accept="image/jpeg,image/png,image/webp,image/gif" style="display:none;" onchange="handleHeroFile(event)">
+            <button class="btn btn-primary" onclick="document.getElementById('heroFileInput').click()" id="heroUploadBtn">
+              Upload New Photo
+            </button>
+            <button class="btn btn-danger" onclick="removeHeroImage()" id="heroRemoveBtn" style="display:none;">
+              Remove
+            </button>
+            <span id="heroFileName" style="font-size:0.82rem;color:var(--text-light);"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── Announcement Banner Manager ───────────────────────── -->
+      <div class="panel" style="margin-bottom:24px;">
+        <div class="panel__header">
+          <div class="panel__title">Urgent Announcement Banner</div>
+        </div>
+        <div style="padding:20px;">
+          <p style="font-size:0.88rem;color:var(--text-mid);margin-bottom:16px;">
+            Set an urgent notice or announcement to display at the very top of all public pages on the website.
+          </p>
+          <div id="bannerAlert" class="alert" style="display:none;"></div>
+
+          <form id="bannerForm" style="max-width: 600px;">
+            <div class="form-group" style="margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+              <input type="checkbox" id="bannerActiveInput" style="width: 18px; height: 18px; cursor: pointer; margin: 0;">
+              <label class="form-label" for="bannerActiveInput" style="margin: 0; font-weight: 700; cursor: pointer;">Enable Announcement Banner</label>
+            </div>
+            <div class="form-group" style="margin-bottom: 16px;">
+              <label class="form-label" for="bannerTextInput">Banner Announcement Text</label>
+              <textarea class="form-textarea" id="bannerTextInput" placeholder="Enter announcement text here..." style="min-height: 80px;" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" id="bannerSaveBtn">💾 Save Announcement</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stat-cards" id="statCards">
+        <div class="loading-wrap"><div class="spinner"></div></div>
+      </div>
+
+      <!-- Telemetry Charts Section -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;">
+        <div class="panel">
+          <div class="panel__header"><div class="panel__title">📊 Constituency Messages Categories</div></div>
+          <div style="padding:20px;height:280px;position:relative;">
+            <canvas id="messagesChart"></canvas>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel__header"><div class="panel__title">🏗️ Development Projects Progress</div></div>
+          <div style="padding:20px;height:280px;position:relative;">
+            <canvas id="projectsChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+        <!-- Recent messages -->
+        <div class="panel">
+          <div class="panel__header">
+            <div class="panel__title">Recent Messages</div>
+            <a href="admin-messages.html" class="btn btn-outline btn-sm">View All</a>
+          </div>
+          <div id="recentMessages"><div class="loading-wrap"><div class="spinner"></div></div></div>
+        </div>
+
+        <!-- Recent posts -->
+        <div class="panel">
+          <div class="panel__header">
+            <div class="panel__title">Recent Posts</div>
+            <a href="admin-posts.html" class="btn btn-outline btn-sm">View All</a>
+          </div>
+          <div id="recentPosts"><div class="loading-wrap"><div class="spinner"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="/js/admin.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    injectAdminShell('dashboard');
+    document.getElementById('topbarTitle').textContent = 'Dashboard';
+    loadDashboard();
+    loadHeroImage();
+    loadBannerSettings();
+  });
+
+  /* ── Announcement Banner Settings ───────────────────────────── */
+  async function loadBannerSettings() {
+    const res = await authFetch('/settings');
+    if (res?.success && res.data) {
+      document.getElementById('bannerActiveInput').checked = res.data.announcement_banner_active === 'true';
+      document.getElementById('bannerTextInput').value = res.data.announcement_banner_text || '';
+    }
+  }
+
+  document.getElementById('bannerForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('bannerSaveBtn');
+    const alertBox = document.getElementById('bannerAlert');
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+    alertBox.style.display = 'none';
+
+    const active = document.getElementById('bannerActiveInput').checked ? 'true' : 'false';
+    const text = document.getElementById('bannerTextInput').value.trim();
+
+    try {
+      const [resActive, resText] = await Promise.all([
+        authFetch('/settings/announcement_banner_active', {
+          method: 'PUT',
+          body: JSON.stringify({ value: active })
+        }),
+        authFetch('/settings/announcement_banner_text', {
+          method: 'PUT',
+          body: JSON.stringify({ value: text })
+        })
+      ]);
+
+      btn.disabled = false;
+      btn.textContent = '💾 Save Announcement';
+
+      if (resActive?.success && resText?.success) {
+        showAlert(alertBox, 'success', 'Announcement banner settings updated successfully.');
+      } else {
+        showAlert(alertBox, 'danger', 'Failed to update settings.');
+      }
+    } catch (err) {
+      console.error(err);
+      btn.disabled = false;
+      btn.textContent = '💾 Save Announcement';
+      showAlert(alertBox, 'danger', 'Error updating banner settings.');
+    }
+  });
+
+  /* ── Hero Background Image ──────────────────────────────────── */
+  async function loadHeroImage() {
+    const data = await authFetch('/settings/hero_image');
+    if (data?.success && data.value) {
+      showHeroPreview(data.value);
+    }
+  }
+
+  function showHeroPreview(url) {
+    const inner = document.getElementById('heroPreviewInner');
+    inner.style.backgroundImage = `linear-gradient(rgba(13,43,26,0.45), rgba(13,43,26,0.55)), url('${url}')`;
+    inner.style.backgroundSize = 'cover';
+    inner.style.backgroundPosition = 'center top';
+    inner.innerHTML = `
+      <div style="text-align:center;color:white;text-shadow:0 2px 8px rgba(0,0,0,0.5);padding:20px;">
+        <div style="font-size:1.4rem;font-weight:900;font-family:'Playfair Display',serif;">Dr. Abed&#8209;Nego Lamangin Bandim</div>
+        <div style="font-size:0.85rem;opacity:0.85;margin-top:6px;">Preview — this is how the homepage hero will look</div>
+      </div>
+    `;
+    document.getElementById('heroRemoveBtn').style.display = 'inline-flex';
+  }
+
+  async function handleHeroFile(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const btn = document.getElementById('heroUploadBtn');
+    const nameEl = document.getElementById('heroFileName');
+    nameEl.textContent = file.name;
+    btn.disabled = true;
+    btn.innerHTML = 'Uploading…';
+
+    // Upload via existing media endpoint
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('caption', 'Hero background — MP photo');
+    const uploadRes = await authUpload('/media', formData);
+
+    if (!uploadRes?.success) {
+      showAlert(document.getElementById('heroAlert'), 'danger', uploadRes?.message || 'Upload failed.');
+      btn.disabled = false;
+      btn.innerHTML = 'Upload New Photo';
+      return;
+    }
+
+    // Save URL to settings
+    const saveRes = await authFetch('/settings/hero_image', {
+      method: 'PUT',
+      body: JSON.stringify({ value: uploadRes.file_url }),
+    });
+
+    btn.disabled = false;
+    btn.innerHTML = 'Upload New Photo';
+    nameEl.textContent = '';
+
+    if (saveRes?.success) {
+      showAlert(document.getElementById('heroAlert'), 'success', 'Hero background updated! Refresh the homepage to see it.');
+      showHeroPreview(uploadRes.file_url);
+    } else {
+      showAlert(document.getElementById('heroAlert'), 'danger', saveRes?.message || 'Failed to save setting.');
+    }
+
+    // Reset file input
+    document.getElementById('heroFileInput').value = '';
+  }
+
+  async function removeHeroImage() {
+    if (!confirm('Remove the hero background image? The homepage will revert to the default gradient.')) return;
+
+    const res = await authFetch('/settings/hero_image', {
+      method: 'PUT',
+      body: JSON.stringify({ value: '' }),
+    });
+
+    if (res?.success) {
+      const inner = document.getElementById('heroPreviewInner');
+      inner.style.backgroundImage = '';
+      inner.innerHTML = 'No hero image set — using default green gradient';
+      document.getElementById('heroRemoveBtn').style.display = 'none';
+      showAlert(document.getElementById('heroAlert'), 'success', 'Hero background removed.');
+    }
+  }
+
+  /* ── Dashboard Stats ────────────────────────────────────────── */
+  async function loadDashboard() {
+    const data = await authFetch('/dashboard/stats');
+    if (!data?.success) return;
+
+    const s = data.stats;
+    document.getElementById('statCards').innerHTML = `
+      <div class="stat-card">
+        <div class="stat-card__label">Total Messages</div>
+        <div class="stat-card__value">${s.totalMessages}</div>
+        <div class="stat-card__sub">${s.pendingMessages} pending</div>
+      </div>
+      <div class="stat-card stat-card--gold">
+        <div class="stat-card__label">Total Projects</div>
+        <div class="stat-card__value">${s.totalProjects}</div>
+        <div class="stat-card__sub">${s.ongoingProjects} ongoing</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card__label">Published Posts</div>
+        <div class="stat-card__value">${s.totalPosts}</div>
+      </div>
+      <div class="stat-card stat-card--gold">
+        <div class="stat-card__label">Subscribers</div>
+        <div class="stat-card__value">${s.totalSubscribers}</div>
+        <div class="stat-card__sub">Newsletter list</div>
+      </div>
+    `;
+
+    // Render Message Categories Doughnut Chart
+    const categoriesMap = {
+      report_issue: 'Issues',
+      request_support: 'Requests',
+      suggest_idea: 'Ideas',
+      general: 'General'
+    };
+    const msgLabels = data.charts.messageCategories.map(c => categoriesMap[c.category] || c.category);
+    const msgCounts = data.charts.messageCategories.map(c => c.count);
+
+    new Chart(document.getElementById('messagesChart'), {
+      type: 'doughnut',
+      data: {
+        labels: msgLabels,
+        datasets: [{
+          data: msgCounts,
+          backgroundColor: ['#e53e3e', '#3182ce', '#d69e2e', '#718096'],
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'bottom', labels: { boxWidth: 12, font: { family: 'Plus Jakarta Sans', weight: 600 } } }
+        }
+      }
+    });
+
+    // Render Projects Status Bar Chart
+    const statusMap = {
+      planned: 'Planned',
+      ongoing: 'Ongoing',
+      completed: 'Completed'
+    };
+    const projLabels = data.charts.projectStatuses.map(s => statusMap[s.status] || s.status);
+    const projCounts = data.charts.projectStatuses.map(s => s.count);
+
+    new Chart(document.getElementById('projectsChart'), {
+      type: 'bar',
+      data: {
+        labels: projLabels,
+        datasets: [{
+          label: 'Projects Count',
+          data: projCounts,
+          backgroundColor: ['#3182ce', '#d69e2e', '#38a169'],
+          borderWidth: 0,
+          borderRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          y: { beginAtZero: true, ticks: { stepSize: 1 } }
+        }
+      }
+    });
+
+    // Recent messages
+    const msgEl = document.getElementById('recentMessages');
+    if (!data.recentMessages.length) {
+      msgEl.innerHTML = '<div class="empty-state"><h3>No messages</h3></div>';
+    } else {
+      msgEl.innerHTML = `<table class="data-table">
+        <thead><tr><th>Name</th><th>Category</th><th>Status</th><th>Date</th></tr></thead>
+        <tbody>
+          ${data.recentMessages.map(m => `<tr>
+            <td><strong>${m.name}</strong></td>
+            <td>${m.category.replace('_',' ')}</td>
+            <td><span class="badge badge-${m.status==='in_progress'?'progress':m.status}">${m.status.replace('_',' ')}</span></td>
+            <td>${formatDate(m.created_at)}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`;
+    }
+
+    // Recent posts
+    const postsEl = document.getElementById('recentPosts');
+    if (!data.recentPosts.length) {
+      postsEl.innerHTML = '<div class="empty-state"><h3>No posts</h3></div>';
+    } else {
+      postsEl.innerHTML = `<table class="data-table">
+        <thead><tr><th>Title</th><th>Status</th><th>Date</th></tr></thead>
+        <tbody>
+          ${data.recentPosts.map(p => `<tr>
+            <td><strong>${truncate(p.title,40)}</strong></td>
+            <td><span class="badge badge-${p.status}">${p.status}</span></td>
+            <td>${formatDate(p.created_at)}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`;
+    }
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Messages — Admin Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/admin.css">
+  <style>
+    .msg-detail { background: var(--cream); border-radius: var(--radius); padding: 16px; margin-top: 12px; font-size: 0.9rem; line-height: 1.7; color: var(--text-mid); white-space: pre-wrap; }
+    .msg-meta   { display: flex; flex-wrap: wrap; gap: 14px; font-size: 0.82rem; color: var(--text-light); margin-bottom: 8px; }
+    .msg-meta strong { color: var(--text-dark); }
+    
+    /* Local Tab styles */
+    .tabs { display: flex; border-bottom: 2px solid var(--border); margin-bottom: 24px; gap: 4px; }
+    .tab-btn {
+      padding: 12px 24px; background: none; color: var(--text-mid); font-weight: 600; font-size: 0.9rem;
+      border-bottom: 3px solid transparent; cursor: pointer; transition: var(--transition);
+      font-family: var(--font);
+    }
+    .tab-btn.active { color: var(--green-mid); border-bottom-color: var(--green-mid); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+  </style>
+  <style>
+    /* ── FORCED NAVBAR FIX ── */
+    header#navbar,
+    header#navbar .navbar,
+    .navbar {
+      background-color: #0d2b1a !important;
+      background: #0d2b1a !important;
+    }
+    .navbar__inner {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      height: 70px !important;
+      max-width: 1140px !important;
+      margin: 0 auto !important;
+      padding: 0 20px !important;
+    }
+    .navbar__site-name { color: #ffffff !important; font-weight: 700 !important; }
+    .navbar__site-name span { color: #e8c97a !important; }
+    .navbar__links a { color: #ffffff !important; text-decoration: none !important; padding: 8px 14px !important; font-weight: 600 !important; }
+    .navbar__links a:hover { color: #e8c97a !important; }
+    .navbar__cta { background: #c9a84c !important; color: #0d2b1a !important; padding: 8px 18px !important; border-radius: 20px !important; font-weight: 700 !important; }
+    .navbar__logo { border-color: #c9a84c !important; color: #c9a84c !important; background: #1a4a2e !important; }
+    .navbar__hamburger span { background: #ffffff !important; }
+    .navbar__mobile-menu { background: #0d2b1a !important; }
+    .navbar__mobile-menu a { color: #ffffff !important; }
+  </style>
+</head>
+<body>
+<div class="admin-layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <div class="admin-main">
+    <div class="topbar" id="topbar"></div>
+    <div class="admin-content">
+      <h2 style="font-size:1.2rem;font-weight:700;margin-bottom:20px;">Constituency Engagement</h2>
+
+      <div id="alertBox" class="alert" style="display:none;"></div>
+
+      <!-- Tabs Selector -->
+      <div class="tabs">
+        <button class="tab-btn active" id="tabMessagesBtn" onclick="switchTab('messages')">Constituency Messages</button>
+        <button class="tab-btn" id="tabSubscribersBtn" onclick="switchTab('subscribers')">Newsletter Subscribers</button>
+      </div>
+
+      <!-- Constituency Messages Tab Content -->
+      <div id="messagesTabContent" class="tab-content active">
+        <!-- Filters -->
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;">
+          <select class="form-select" id="statusFilter" style="width:auto;padding:8px 12px;" onchange="loadMessages()">
+            <option value="">All Statuses</option>
+            <option value="pending">Pending</option>
+            <option value="in_progress">In Progress</option>
+            <option value="resolved">Resolved</option>
+          </select>
+          <select class="form-select" id="catFilter" style="width:auto;padding:8px 12px;" onchange="loadMessages()">
+            <option value="">All Categories</option>
+            <option value="report_issue">Report Issue</option>
+            <option value="request_support">Request Support</option>
+            <option value="suggest_idea">Suggest Idea</option>
+            <option value="general">General</option>
+          </select>
+        </div>
+
+        <div class="panel">
+          <div id="messagesTable"><div class="loading-wrap"><div class="spinner"></div></div></div>
+        </div>
+      </div>
+
+      <!-- Newsletter Subscribers Tab Content -->
+      <div id="subscribersTabContent" class="tab-content">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:18px; flex-wrap:wrap; gap:10px;">
+          <div style="font-size:0.9rem; color:var(--text-mid);">Manage newsletter subscriptions list and database registrations.</div>
+          <button class="btn btn-primary" onclick="exportSubscribers()" style="padding: 8px 16px; font-size: 0.85rem;">📥 Export CSV List</button>
+        </div>
+
+        <div class="panel">
+          <div id="subscribersTable"><div class="loading-wrap"><div class="spinner"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Message detail modal -->
+<div class="modal-overlay" id="msgModal">
+  <div class="modal" style="max-width:640px;">
+    <div class="modal__header">
+      <div class="modal__title">Message Detail</div>
+      <button class="modal__close" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="modal__body" id="msgModalBody">Loading…</div>
+    <div class="modal__footer" id="msgModalFooter"></div>
+  </div>
+</div>
+
+<script src="/js/admin.js"></script>
+<script>
+  let activeTab = 'messages';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    injectAdminShell('messages');
+    document.getElementById('topbarTitle').textContent = 'Engagement';
+    loadMessages();
+  });
+
+  function switchTab(tab) {
+    activeTab = tab;
+    
+    // Toggle active buttons
+    document.getElementById('tabMessagesBtn').classList.toggle('active', tab === 'messages');
+    document.getElementById('tabSubscribersBtn').classList.toggle('active', tab === 'subscribers');
+    
+    // Toggle active content divs
+    document.getElementById('messagesTabContent').classList.toggle('active', tab === 'messages');
+    document.getElementById('subscribersTabContent').classList.toggle('active', tab === 'subscribers');
+    
+    if (tab === 'messages') {
+      loadMessages();
+    } else {
+      loadSubscribers();
+    }
+  }
+
+  async function loadMessages() {
+    const el  = document.getElementById('messagesTable');
+    const st  = document.getElementById('statusFilter').value;
+    const cat = document.getElementById('catFilter').value;
+    el.innerHTML = '<div class="loading-wrap"><div class="spinner"></div></div>';
+
+    let url = '/messages?';
+    if (st)  url += `status=${st}&`;
+    if (cat) url += `category=${cat}&`;
+
+    const data = await authFetch(url);
+    if (!data?.success || !data.data.length) {
+      el.innerHTML = '<div class="empty-state"><h3>No messages found</h3></div>';
+      return;
+    }
+
+    el.innerHTML = `<table class="data-table">
+      <thead><tr><th>Name</th><th>Contact</th><th>Category</th><th>Status</th><th>Date</th><th>Attachment</th><th>Actions</th></tr></thead>
+      <tbody>
+        ${data.data.map(m => `<tr>
+          <td><strong>${m.name}</strong></td>
+          <td>${m.contact}</td>
+          <td><span style="text-transform:capitalize;">${m.category.replace(/_/g,' ')}</span></td>
+          <td>
+            <select class="form-select" style="padding:5px 8px;font-size:0.78rem;width:auto;"
+              onchange="updateStatus(${m.id}, this.value)">
+              <option value="pending"     ${m.status==='pending'    ?'selected':''}>Pending</option>
+              <option value="in_progress" ${m.status==='in_progress'?'selected':''}>In Progress</option>
+              <option value="resolved"    ${m.status==='resolved'   ?'selected':''}>Resolved</option>
+            </select>
+          </td>
+          <td>${formatDate(m.created_at)}</td>
+          <td>${m.file_url ? `<a href="${m.file_url}" target="_blank" style="color:var(--green-mid);font-weight:700;">View File</a>` : '<span style="color:var(--text-light)">None</span>'}</td>
+          <td style="display:flex;gap:6px;">
+            <button class="btn btn-outline btn-sm" onclick="viewMessage(${m.id})">View</button>
+            <button class="btn btn-danger btn-sm"  onclick="deleteMessage(${m.id},'${m.name.replace(/'/g,"\\'")}')">Delete</button>
+          </td>
+        </tr>`).join('')}
+      </tbody>
+    </table>`;
+  }
+
+  async function loadSubscribers() {
+    const el = document.getElementById('subscribersTable');
+    el.innerHTML = '<div class="loading-wrap"><div class="spinner"></div></div>';
+    
+    const data = await authFetch('/newsletter/subscribers');
+    if (!data?.success || !data.data.length) {
+      el.innerHTML = '<div class="empty-state"><h3>No subscribers found</h3></div>';
+      return;
+    }
+
+    el.innerHTML = `<table class="data-table">
+      <thead><tr><th>ID</th><th>Email Address</th><th>Signup Date</th></tr></thead>
+      <tbody>
+        ${data.data.map(s => `<tr>
+          <td>${s.id}</td>
+          <td><strong>${s.email}</strong></td>
+          <td>${formatDate(s.created_at)}</td>
+        </tr>`).join('')}
+      </tbody>
+    </table>`;
+  }
+
+  async function exportSubscribers() {
+    const data = await authFetch('/newsletter/subscribers');
+    if (!data?.success || !data.data.length) {
+      alert('No subscribers to export.');
+      return;
+    }
+    
+    // Generate CSV content
+    let csvContent = 'data:text/csv;charset=utf-8,';
+    csvContent += 'ID,Email,Created At\n';
+    
+    data.data.forEach(s => {
+      csvContent += `${s.id},"${s.email}",${s.created_at}\n`;
+    });
+    
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', `newsletter_subscribers_${new Date().toISOString().slice(0,10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  async function updateStatus(id, status) {
+    const res = await authFetch(`/messages/${id}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status }),
+    });
+    showAlert(document.getElementById('alertBox'), res?.success ? 'success' : 'danger', res?.message);
+  }
+
+  async function viewMessage(id) {
+    const body   = document.getElementById('msgModalBody');
+    const footer = document.getElementById('msgModalFooter');
+    body.innerHTML = '<div class="loading-wrap"><div class="spinner"></div></div>';
+    document.getElementById('msgModal').classList.add('open');
+
+    const data = await authFetch(`/messages/${id}`);
+    if (!data?.success) { body.innerHTML = '<p>Failed to load message.</p>'; return; }
+    const m = data.data;
+
+    let fileHtml = '';
+    if (m.file_url) {
+      const isImage = /\.(jpeg|jpg|png|gif|webp)$/i.test(m.file_url);
+      if (isImage) {
+        fileHtml = `
+          <div style="margin-top: 16px; border-top: 1px solid var(--border); padding-top: 14px;">
+            <div style="font-size:0.78rem; font-weight:700; color:var(--text-light); margin-bottom:6px;">📎 Attachment Image:</div>
+            <a href="${m.file_url}" target="_blank">
+              <img src="${m.file_url}" style="max-height:220px; border-radius:var(--radius); border:1px solid var(--border); cursor:zoom-in;" />
+            </a>
+          </div>
+        `;
+      } else {
+        fileHtml = `
+          <div style="margin-top: 16px; border-top: 1px solid var(--border); padding-top: 14px; display:flex; align-items:center; gap:8px;">
+            <span style="font-size:0.85rem; font-weight:700; color:var(--text-light);">FILE:</span>
+            <div>
+              <div style="font-size:0.78rem; font-weight:700; color:var(--text-light);">Attachment Document:</div>
+              <a href="${m.file_url}" target="_blank" style="color:var(--green-mid); font-weight:700; font-size:0.85rem; text-decoration:underline;">
+                Download File (${m.file_url.split('/').pop()})
+              </a>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    body.innerHTML = `
+      <div class="msg-meta">
+        <span><strong>Name:</strong> ${m.name}</span>
+        <span><strong>Contact:</strong> ${m.contact}</span>
+        <span><strong>Category:</strong> ${m.category.replace(/_/g,' ')}</span>
+        <span><strong>Date:</strong> ${formatDate(m.created_at)}</span>
+      </div>
+      <div class="msg-detail">${m.message}</div>
+      ${fileHtml}
+    `;
+
+    footer.innerHTML = `
+      <label style="font-size:0.83rem;font-weight:600;margin-right:8px;">Update Status:</label>
+      <select class="form-select" id="modalStatusSelect" style="width:auto;padding:8px 12px;margin-right:10px;">
+        <option value="pending"     ${m.status==='pending'    ?'selected':''}>Pending</option>
+        <option value="in_progress" ${m.status==='in_progress'?'selected':''}>In Progress</option>
+        <option value="resolved"    ${m.status==='resolved'   ?'selected':''}>Resolved</option>
+      </select>
+      <button class="btn btn-primary" onclick="saveModalStatus(${m.id})">Save</button>
+      <button class="btn btn-outline" onclick="closeModal()" style="margin-left:8px;">Close</button>
+    `;
+  }
+
+  async function saveModalStatus(id) {
+    const status = document.getElementById('modalStatusSelect').value;
+    const res = await authFetch(`/messages/${id}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status }),
+    });
+    showAlert(document.getElementById('alertBox'), res?.success ? 'success' : 'danger', res?.message);
+    if (res?.success) { closeModal(); loadMessages(); }
+  }
+
+  async function deleteMessage(id, name) {
+    if (!confirmDelete(name)) return;
+    const res = await authFetch(`/messages/${id}`, { method: 'DELETE' });
+    showAlert(document.getElementById('alertBox'), res?.success ? 'success' : 'danger', res?.message);
+    if (res?.success) loadMessages();
+  }
+
+  function closeModal() { document.getElementById('msgModal').classList.remove('open'); }
+</script>
+</body>
+</html>

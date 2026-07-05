@@ -1,0 +1,23 @@
+# Environment variables — NEVER commit these
+backend/.env
+
+# Node modules
+backend/node_modules/
+
+# Uploaded media files
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*

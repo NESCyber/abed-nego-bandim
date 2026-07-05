@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Constituency Portal — Dr. Abed-Nego Lamangin Bandim, MP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .portal-tabs { display:grid; grid-template-columns: repeat(3,1fr); gap:16px; margin-bottom:40px; }
+    .portal-tab-card {
+      background:var(--white); border:2px solid var(--border); border-radius:var(--radius-lg);
+      padding:24px 20px; text-align:center; cursor:pointer; transition:var(--transition);
+    }
+    .portal-tab-card:hover { border-color:var(--green-mid); }
+    .portal-tab-card.active { border-color:var(--green-mid); background:var(--green-dark); color:var(--white); }
+    .portal-tab-card.active .ptc-label { color:rgba(255,255,255,0.8); }
+    .ptc-icon  { font-size:2.2rem; margin-bottom:10px; }
+    .ptc-title { font-family:var(--font-head); font-weight:700; font-size:1rem; margin-bottom:4px; }
+    .ptc-label { font-size:0.82rem; color:var(--text-light); }
+    .form-section { display:none; }
+    .form-section.active { display:block; }
+    @media(max-width:580px) { .portal-tabs { grid-template-columns:1fr; } }
+  </style>
+  <style>
+    /* ── FORCED NAVBAR FIX ── */
+    header#navbar,
+    header#navbar .navbar,
+    .navbar {
+      background-color: #0d2b1a !important;
+      background: #0d2b1a !important;
+    }
+    .navbar__inner {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      height: 70px !important;
+      max-width: 1140px !important;
+      margin: 0 auto !important;
+      padding: 0 20px !important;
+    }
+    .navbar__site-name { color: #ffffff !important; font-weight: 700 !important; }
+    .navbar__site-name span { color: #e8c97a !important; }
+    .navbar__links a { color: #ffffff !important; text-decoration: none !important; padding: 8px 14px !important; font-weight: 600 !important; }
+    .navbar__links a:hover { color: #e8c97a !important; }
+    .navbar__cta { background: #c9a84c !important; color: #0d2b1a !important; padding: 8px 18px !important; border-radius: 20px !important; font-weight: 700 !important; }
+    .navbar__logo { border-color: #c9a84c !important; color: #c9a84c !important; background: #1a4a2e !important; }
+    .navbar__hamburger span { background: #ffffff !important; }
+    .navbar__mobile-menu { background: #0d2b1a !important; }
+    .navbar__mobile-menu a { color: #ffffff !important; }
+  </style>
+</head>
+<body>
+  <header id="navbar"></header>
+
+  <div class="page-hero">
+    <h1>Constituency Portal</h1>
+    <p>Report issues, request support, or share ideas directly with the MP's office.</p>
+  </div>
+
+  <section class="section">
+    <div class="container" style="max-width:740px;">
+
+      <div class="alert alert-info" style="margin-bottom:28px;">
+        All submissions are reviewed by the MP's office. You will be contacted within 5–7 working days.
+      </div>
+
+      <!-- Type selector -->
+      <div class="portal-tabs">
+        <div class="portal-tab-card active" data-type="report_issue" onclick="selectType(this)">
+          <div class="ptc-title">Report an Issue</div>
+          <div class="ptc-label">Infrastructure, utilities, public services</div>
+        </div>
+        <div class="portal-tab-card" data-type="request_support" onclick="selectType(this)">
+          <div class="ptc-title">Request Support</div>
+          <div class="ptc-label">Scholarships, medical, community needs</div>
+        </div>
+        <div class="portal-tab-card" data-type="suggest_idea" onclick="selectType(this)">
+          <div class="ptc-title">Suggest an Idea</div>
+          <div class="ptc-label">Projects, programmes, development ideas</div>
+        </div>
+      </div>
+
+      <!-- Shared form -->
+      <div class="form-card">
+        <div id="formSuccess" class="form-success" style="margin-bottom:20px;">
+          Thank you! Your submission has been received. The MP's office will be in touch.
+        </div>
+        <div id="formError" class="form-error" style="margin-bottom:20px;"></div>
+
+        <form id="portalForm">
+          <input type="hidden" id="categoryInput" value="report_issue">
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="nameInput">Full Name <span>*</span></label>
+              <input class="form-input" type="text" id="nameInput" placeholder="Your full name" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="contactInput">Phone or Email <span>*</span></label>
+              <input class="form-input" type="text" id="contactInput" placeholder="+233... or email@..." required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="messageInput">Your Message <span>*</span></label>
+            <textarea class="form-textarea" id="messageInput" placeholder="Please describe your issue, request, or idea in as much detail as possible..." required></textarea>
+            <div class="form-hint">Be as specific as possible — include your community/area name if relevant.</div>
+          </div>
+
+          <div class="form-group" style="margin-top:20px; margin-bottom:24px;">
+            <label class="form-label" for="fileInput">Upload Attachment <span style="color:var(--text-light);font-weight:400;">(Optional — images, PDFs, word docs, txt)</span></label>
+            <input type="file" id="fileInput" accept=".jpeg,.jpg,.png,.gif,.webp,.pdf,.docx,.doc,.txt" style="width:100%; font-family:var(--font-body); font-size:0.92rem; border:2px solid var(--border); border-radius:var(--radius); padding:10px; background:var(--cream); outline:none;">
+            <div class="form-hint">Max file size: 10MB. Useful for attaching photo evidence, medical requests, or documents.</div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" id="submitBtn" style="width:100%;justify-content:center;padding:15px;">
+            Submit to MP's Office
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer id="footer" class="footer"></footer>
+  <script src="/js/main.js"></script>
+  <script>
+    function selectType(el) {
+      document.querySelectorAll('.portal-tab-card').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('categoryInput').value = el.dataset.type;
+    }
+
+    document.getElementById('portalForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn     = document.getElementById('submitBtn');
+      const success = document.getElementById('formSuccess');
+      const error   = document.getElementById('formError');
+
+      success.style.display = 'none';
+      error.style.display   = 'none';
+      btn.disabled = true;
+      btn.textContent = 'Submitting…';
+
+      const formData = new FormData();
+      formData.append('name', document.getElementById('nameInput').value.trim());
+      formData.append('contact', document.getElementById('contactInput').value.trim());
+      formData.append('category', document.getElementById('categoryInput').value);
+      formData.append('message', document.getElementById('messageInput').value.trim());
+
+      const fileField = document.getElementById('fileInput');
+      if (fileField && fileField.files[0]) {
+        formData.append('file', fileField.files[0]);
+      }
+
+      try {
+        const res = await fetch('/api/messages', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+
+        btn.disabled = false;
+        btn.innerHTML = 'Submit to MP\'s Office';
+
+        if (data.success) {
+          success.style.display = 'block';
+          document.getElementById('portalForm').reset();
+          success.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+          error.style.display = 'block';
+          error.textContent = data.message || 'Something went wrong. Please try again.';
+        }
+      } catch (err) {
+        console.error('Portal submit error:', err);
+        btn.disabled = false;
+        btn.innerHTML = 'Submit to MP\'s Office';
+        error.style.display = 'block';
+        error.textContent = 'Network error. Please try again.';
+      }
+    });
+  </script>
+</body>
+</html>

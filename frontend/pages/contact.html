@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact — Dr. Abed-Nego Lamangin Bandim, MP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .contact-grid { display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:start; }
+    .contact-card { background:var(--white); border-radius:var(--radius-lg); padding:32px; box-shadow:var(--shadow-sm); border:1px solid var(--border); }
+    .contact-item { display:flex; gap:16px; align-items:flex-start; padding:16px 0; border-bottom:1px solid var(--border); }
+    .contact-item:last-child { border-bottom:none; }
+    .contact-item__icon { font-size:1.5rem; min-width:36px; }
+    .contact-item__label { font-size:0.78rem; color:var(--text-light); font-weight:700; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px; }
+    .contact-item__value { color:var(--text-dark); font-size:0.96rem; font-weight:600; }
+    .contact-item__value a { color:var(--green-mid); }
+    .map-container { margin-top:24px; border-radius:var(--radius-lg); overflow:hidden; box-shadow:var(--shadow-sm); border:1px solid var(--border); }
+    .map-image { width:100%; height:auto; display:block; transition:var(--transition); }
+    .map-image:hover { transform:scale(1.02); }
+    @media(max-width:720px) { .contact-grid { grid-template-columns:1fr; } }
+  </style>
+  <style>
+    /* ── FORCED NAVBAR FIX ── */
+    header#navbar,
+    header#navbar .navbar,
+    .navbar {
+      background-color: #0d2b1a !important;
+      background: #0d2b1a !important;
+    }
+    .navbar__inner {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      height: 70px !important;
+      max-width: 1140px !important;
+      margin: 0 auto !important;
+      padding: 0 20px !important;
+    }
+    .navbar__site-name { color: #ffffff !important; font-weight: 700 !important; }
+    .navbar__site-name span { color: #e8c97a !important; }
+    .navbar__links a { color: #ffffff !important; text-decoration: none !important; padding: 8px 14px !important; font-weight: 600 !important; }
+    .navbar__links a:hover { color: #e8c97a !important; }
+    .navbar__cta { background: #c9a84c !important; color: #0d2b1a !important; padding: 8px 18px !important; border-radius: 20px !important; font-weight: 700 !important; }
+    .navbar__logo { border-color: #c9a84c !important; color: #c9a84c !important; background: #1a4a2e !important; }
+    .navbar__hamburger span { background: #ffffff !important; }
+    .navbar__mobile-menu { background: #0d2b1a !important; }
+    .navbar__mobile-menu a { color: #ffffff !important; }
+  </style>
+</head>
+<body>
+  <header id="navbar"></header>
+
+  <div class="page-hero">
+    <h1>Contact the Office</h1>
+    <p>Get in touch with the MP's constituency office.</p>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="contact-grid">
+
+        <!-- Contact info -->
+        <div>
+          <div class="contact-card">
+            <h2 style="font-family:var(--font-head);color:var(--green-dark);margin-bottom:4px;font-size:1.4rem;">Constituency Office</h2>
+            <p style="color:var(--text-light);font-size:0.88rem;margin-bottom:8px;">Dr. Abed-Nego Lamangin Bandim, MP</p>
+
+            <div class="contact-item">
+              <div class="contact-item__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+              <div>
+                <div class="contact-item__label">Office Address</div>
+                <div class="contact-item__value">Bunkpurugu Constituency Office<br>Bunkpurugu, North East Region<br>Ghana</div>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-item__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+              <div>
+                <div class="contact-item__label">Phone</div>
+                <div class="contact-item__value"><a href="tel:+233302633030">+233 302 633 030 Ext 4124</a></div>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-item__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+              <div>
+                <div class="contact-item__label">Email</div>
+                <div class="contact-item__value"><a href="mailto:baazumah@parliament.gh">baazumah@parliament.gh</a></div>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-item__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+              <div>
+                <div class="contact-item__label">Office Hours</div>
+                <div class="contact-item__value">Monday – Friday: 8:00 AM – 5:00 PM</div>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-item__icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="2" y1="20" x2="22" y2="20"/><line x1="14" y1="11" x2="14" y2="20"/><line x1="18" y1="11" x2="18" y2="20"/><line x1="6" y1="11" x2="6" y2="20"/><line x1="10" y1="11" x2="10" y2="20"/><path d="m12 2-10 9h20z"/></svg></div>
+              <div>
+                <div class="contact-item__label">Parliament Office</div>
+                <div class="contact-item__value">Parliament House, Accra<br>Ghana</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="map-container">
+            <img src="/bunkpurugu-map.jpg" alt="Map of Bunkpurugu Constituency" class="map-image">
+          </div>
+        </div>
+
+        <!-- Quick message form -->
+        <div>
+          <div class="form-card" style="max-width:100%;">
+            <h2 style="font-family:var(--font-head);color:var(--green-dark);margin-bottom:6px;font-size:1.4rem;">Send a Message</h2>
+            <p style="color:var(--text-light);font-size:0.88rem;margin-bottom:24px;">For project reports, requests, or ideas — use the <a href="portal.html" style="color:var(--green-mid);font-weight:600;">Constituency Portal</a>.</p>
+
+            <div id="msgSuccess" class="form-success" style="margin-bottom:18px;">Message sent! We'll get back to you soon.</div>
+            <div id="msgError"   class="form-error"   style="margin-bottom:18px;"></div>
+
+            <form id="contactForm">
+              <div class="form-group">
+                <label class="form-label" for="cName">Name <span>*</span></label>
+                <input class="form-input" type="text" id="cName" placeholder="Your name" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="cContact">Phone or Email <span>*</span></label>
+                <input class="form-input" type="text" id="cContact" placeholder="+233... or email@..." required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="cMessage">Message <span>*</span></label>
+                <textarea class="form-textarea" id="cMessage" placeholder="How can the office assist you?" required></textarea>
+              </div>
+              <button type="submit" class="btn btn-green" style="width:100%;justify-content:center;padding:14px;" id="cBtn">
+                Send Message
+              </button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer id="footer" class="footer"></footer>
+  <script src="/js/main.js"></script>
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('cBtn');
+      const success = document.getElementById('msgSuccess');
+      const error   = document.getElementById('msgError');
+      success.style.display = 'none'; error.style.display = 'none';
+      btn.disabled = true; btn.textContent = 'Sending…';
+
+      const res = await apiFetch('/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name:     document.getElementById('cName').value.trim(),
+          contact:  document.getElementById('cContact').value.trim(),
+          category: 'general',
+          message:  document.getElementById('cMessage').value.trim(),
+        }),
+      });
+
+      btn.disabled = false; btn.innerHTML = 'Send Message';
+      if (res.success) { success.style.display = 'block'; document.getElementById('contactForm').reset(); }
+      else { error.style.display = 'block'; error.textContent = res.message || 'Error. Please try again.'; }
+    });
+  </script>
+</body>
+</html>

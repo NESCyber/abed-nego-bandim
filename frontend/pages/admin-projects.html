@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Projects — Admin Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/admin.css">
+  <style>
+    /* ── FORCED NAVBAR FIX ── */
+    header#navbar,
+    header#navbar .navbar,
+    .navbar {
+      background-color: #0d2b1a !important;
+      background: #0d2b1a !important;
+    }
+    .navbar__inner {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      height: 70px !important;
+      max-width: 1140px !important;
+      margin: 0 auto !important;
+      padding: 0 20px !important;
+    }
+    .navbar__site-name { color: #ffffff !important; font-weight: 700 !important; }
+    .navbar__site-name span { color: #e8c97a !important; }
+    .navbar__links a { color: #ffffff !important; text-decoration: none !important; padding: 8px 14px !important; font-weight: 600 !important; }
+    .navbar__links a:hover { color: #e8c97a !important; }
+    .navbar__cta { background: #c9a84c !important; color: #0d2b1a !important; padding: 8px 18px !important; border-radius: 20px !important; font-weight: 700 !important; }
+    .navbar__logo { border-color: #c9a84c !important; color: #c9a84c !important; background: #1a4a2e !important; }
+    .navbar__hamburger span { background: #ffffff !important; }
+    .navbar__mobile-menu { background: #0d2b1a !important; }
+    .navbar__mobile-menu a { color: #ffffff !important; }
+  </style>
+</head>
+<body>
+<div class="admin-layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <div class="admin-main">
+    <div class="topbar" id="topbar"></div>
+    <div class="admin-content">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <h2 style="font-size:1.2rem;font-weight:700;">Manage Projects</h2>
+        <button class="btn btn-primary" onclick="openModal()">+ Add Project</button>
+      </div>
+
+      <div id="alertBox" class="alert" style="display:none;"></div>
+
+      <!-- Filter -->
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;">
+        <select class="form-select" id="catFilter" style="width:auto;padding:8px 12px;" onchange="loadProjects()">
+          <option value="">All Categories</option>
+          <option value="health">Health</option>
+          <option value="education">Education</option>
+          <option value="infrastructure">Infrastructure</option>
+          <option value="ict">ICT</option>
+          <option value="other">Other</option>
+        </select>
+        <select class="form-select" id="statusFilter" style="width:auto;padding:8px 12px;" onchange="loadProjects()">
+          <option value="">All Statuses</option>
+          <option value="planned">Planned</option>
+          <option value="ongoing">Ongoing</option>
+          <option value="completed">Completed</option>
+        </select>
+      </div>
+
+      <div class="panel">
+        <div id="projectsTable"><div class="loading-wrap"><div class="spinner"></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="projectModal">
+  <div class="modal">
+    <div class="modal__header">
+      <div class="modal__title" id="modalTitle">Add Project</div>
+      <button class="modal__close" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="modal__body">
+      <form id="projectForm">
+        <input type="hidden" id="projectId">
+        <div class="form-group">
+          <label class="form-label" for="pTitle">Title <span>*</span></label>
+          <input class="form-input" type="text" id="pTitle" placeholder="Project title" required>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="pCategory">Category <span>*</span></label>
+            <select class="form-select" id="pCategory" required>
+              <option value="">Select…</option>
+              <option value="health">Health</option>
+              <option value="education">Education</option>
+              <option value="infrastructure">Infrastructure</option>
+              <option value="ict">ICT</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="pStatus">Status</label>
+            <select class="form-select" id="pStatus">
+              <option value="planned">Planned</option>
+              <option value="ongoing">Ongoing</option>
+              <option value="completed">Completed</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="pLocation">Location</label>
+          <input class="form-input" type="text" id="pLocation" placeholder="Community / area name">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="pImage">Image URL</label>
+          <input class="form-input" type="url" id="pImage" placeholder="https://...">
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="pDesc">Description <span>*</span></label>
+          <textarea class="form-textarea" id="pDesc" placeholder="Describe the project…" required></textarea>
+        </div>
+      </form>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveProject()" id="saveBtn">Save Project</button>
+    </div>
+  </div>
+</div>
+
+<script src="/js/admin.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    injectAdminShell('projects');
+    document.getElementById('topbarTitle').textContent = 'Manage Projects';
+    loadProjects();
+  });
+
+  async function loadProjects() {
+    const el  = document.getElementById('projectsTable');
+    const cat = document.getElementById('catFilter').value;
+    const st  = document.getElementById('statusFilter').value;
+    el.innerHTML = '<div class="loading-wrap"><div class="spinner"></div></div>';
+
+    let url = '/projects?';
+    if (cat) url += `category=${cat}&`;
+    if (st)  url += `status=${st}&`;
+
+    const data = await authFetch(url);
+    if (!data?.success || !data.data.length) {
+      el.innerHTML = '<div class="empty-state"><h3>No projects found</h3></div>';
+      return;
+    }
+    el.innerHTML = `<table class="data-table">
+      <thead><tr><th>Title</th><th>Category</th><th>Location</th><th>Status</th><th>Date</th><th>Actions</th></tr></thead>
+      <tbody>
+        ${data.data.map(p => `<tr>
+          <td><strong>${truncate(p.title,45)}</strong></td>
+          <td>${p.category}</td>
+          <td>${p.location || '—'}</td>
+          <td><span class="badge badge-${p.status}">${p.status}</span></td>
+          <td>${formatDate(p.created_at)}</td>
+          <td style="display:flex;gap:6px;">
+            <button class="btn btn-outline btn-sm" onclick="editProject(${p.id})">Edit</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteProject(${p.id},'${p.title.replace(/'/g,"\\'")}')">Delete</button>
+          </td>
+        </tr>`).join('')}
+      </tbody>
+    </table>`;
+  }
+
+  function openModal(proj = null) {
+    document.getElementById('projectId').value   = proj?.id || '';
+    document.getElementById('pTitle').value      = proj?.title || '';
+    document.getElementById('pCategory').value   = proj?.category || '';
+    document.getElementById('pStatus').value     = proj?.status || 'planned';
+    document.getElementById('pLocation').value   = proj?.location || '';
+    document.getElementById('pImage').value      = proj?.image_url || '';
+    document.getElementById('pDesc').value       = proj?.description || '';
+    document.getElementById('modalTitle').textContent = proj ? 'Edit Project' : 'Add Project';
+    document.getElementById('projectModal').classList.add('open');
+  }
+  function closeModal() { document.getElementById('projectModal').classList.remove('open'); }
+
+  async function editProject(id) {
+    const data = await authFetch(`/projects/${id}`);
+    if (data?.success) openModal(data.data);
+  }
+
+  async function saveProject() {
+    const id      = document.getElementById('projectId').value;
+    const payload = {
+      title:       document.getElementById('pTitle').value.trim(),
+      description: document.getElementById('pDesc').value.trim(),
+      category:    document.getElementById('pCategory').value,
+      location:    document.getElementById('pLocation').value.trim(),
+      status:      document.getElementById('pStatus').value,
+      image_url:   document.getElementById('pImage').value.trim(),
+    };
+    if (!payload.title || !payload.description || !payload.category) {
+      alert('Title, description, and category are required.'); return;
+    }
+    const btn = document.getElementById('saveBtn');
+    btn.disabled = true; btn.textContent = 'Saving…';
+    const res = await authFetch(id ? `/projects/${id}` : '/projects', {
+      method: id ? 'PUT' : 'POST', body: JSON.stringify(payload)
+    });
+    btn.disabled = false; btn.textContent = 'Save Project';
+    showAlert(document.getElementById('alertBox'), res?.success ? 'success' : 'danger', res?.message);
+    if (res?.success) { closeModal(); loadProjects(); }
+  }
+
+  async function deleteProject(id, title) {
+    if (!confirmDelete(title)) return;
+    const res = await authFetch(`/projects/${id}`, { method: 'DELETE' });
+    showAlert(document.getElementById('alertBox'), res?.success ? 'success' : 'danger', res?.message);
+    if (res?.success) loadProjects();
+  }
+</script>
+</body>
+</html>

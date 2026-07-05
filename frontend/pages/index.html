@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Official website of Dr. Abed-Nego Lamangin Bandim, Member of Parliament for Bunkpurugu Constituency.">
+  <title>Dr. Abed-Nego Lamangin Bandim — MP, Bunkpurugu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    /* ── FORCED NAVBAR FIX ── */
+    header#navbar,
+    header#navbar .navbar,
+    .navbar {
+      background-color: #0d2b1a !important;
+      background: #0d2b1a !important;
+    }
+    .navbar__inner {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      height: 70px !important;
+      max-width: 1140px !important;
+      margin: 0 auto !important;
+      padding: 0 20px !important;
+    }
+    .navbar__site-name { color: #ffffff !important; font-weight: 700 !important; }
+    .navbar__site-name span { color: #e8c97a !important; }
+    .navbar__links a { color: #ffffff !important; text-decoration: none !important; padding: 8px 14px !important; font-weight: 600 !important; }
+    .navbar__links a:hover { color: #e8c97a !important; }
+    .navbar__cta { background: #c9a84c !important; color: #0d2b1a !important; padding: 8px 18px !important; border-radius: 20px !important; font-weight: 700 !important; }
+    .navbar__logo { border-color: #c9a84c !important; color: #c9a84c !important; background: #1a4a2e !important; }
+    .navbar__hamburger span { background: #ffffff !important; }
+    .navbar__mobile-menu { background: #0d2b1a !important; }
+    .navbar__mobile-menu a { color: #ffffff !important; }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header id="navbar"></header>
+
+  <!-- HERO -->
+  <section class="hero" id="heroSection">
+    <div class="hero__overlay" id="heroOverlay"></div>
+    <div class="hero__inner">
+      <div class="hero__badge">Member of Parliament &bull; 9th Parliament of Ghana</div>
+      <h1 class="hero__name">Dr. Abed&#8209;Nego<br><span class="gold">Lamangin Bandim</span></h1>
+      <p class="hero__title">Member of Parliament &mdash; Bunkpurugu Constituency</p>
+      <p class="hero__mission">
+        Championing inclusive development, quality education, and better healthcare for every community in Bunkpurugu. Serving with integrity, accountability, and a deep commitment to progress.
+      </p>
+      <div class="hero__actions">
+        <a href="projects.html" class="btn btn-primary">View Projects</a>
+        <a href="portal.html"   class="btn btn-outline">Report an Issue</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar">
+    <div class="stats-bar__inner">
+      <div class="stat-item">
+        <div class="stat-item__number" id="statProjects">—</div>
+        <div class="stat-item__label">Total Projects</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-item__number" id="statCompleted">—</div>
+        <div class="stat-item__label">Completed</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-item__number" id="statOngoing">—</div>
+        <div class="stat-item__label">Ongoing</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-item__number" id="statMessages">—</div>
+        <div class="stat-item__label">Constituents Served</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LATEST UPDATES -->
+  <section class="section">
+    <div class="container">
+      <div class="section__header">
+        <div class="section__tag">Latest Updates</div>
+        <h2 class="section__title">News from <span class="accent">Bunkpurugu</span></h2>
+        <p class="section__sub">Stay informed with the latest announcements, project updates, and constituency news.</p>
+      </div>
+      <div id="postsGrid" class="card-grid">
+        <div class="loading-wrap"><div class="spinner"></div></div>
+      </div>
+      <div class="section__footer">
+        <a href="news.html" class="btn btn-green">View All News &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURED PROJECTS -->
+  <section class="section section--alt">
+    <div class="container">
+      <div class="section__header">
+        <div class="section__tag">Development Projects</div>
+        <h2 class="section__title">Building a Better <span class="accent">Bunkpurugu</span></h2>
+        <p class="section__sub">Ongoing and completed projects across health, education, infrastructure, and ICT.</p>
+      </div>
+      <div id="projectsGrid" class="card-grid">
+        <div class="loading-wrap"><div class="spinner"></div></div>
+      </div>
+      <div class="section__footer">
+        <a href="projects.html" class="btn btn-green">See All Projects &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section class="cta-banner">
+    <div class="container">
+      <h2>Your Voice Matters</h2>
+      <p>Have an issue, a request, or an idea for your community? Reach out directly through the Constituency Portal.</p>
+      <div class="cta-banner__actions">
+        <a href="portal.html" class="btn btn-primary">Open Constituency Portal</a>
+        <a href="contact.html" class="btn btn-outline">Contact the Office</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER SIGNUP -->
+  <section class="section" style="background:var(--white); border-top:1px solid var(--border); border-bottom:1px solid var(--border); padding: 50px 20px;">
+    <div class="container" style="max-width: 600px; text-align: center;">
+      <h3 style="font-family: var(--font-head); font-size: 1.6rem; font-weight: 800; color: var(--green-dark); margin-bottom: 8px;">Subscribe to our Newsletter</h3>
+      <p style="color: var(--text-mid); font-size: 0.9rem; margin-bottom: 24px;">Get weekly updates on development initiatives, announcements, and news straight to your inbox.</p>
+      
+      <form id="newsletterForm" style="display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;">
+        <input 
+          type="email" 
+          id="newsletterEmail" 
+          placeholder="Enter your email address..." 
+          required 
+          style="flex: 1; min-width: 250px; padding: 12px 16px; border: 2px solid var(--border); border-radius: var(--radius); outline: none; font-family: var(--font-body); font-size: 0.95rem; transition: var(--transition);"
+        >
+        <button type="submit" class="btn btn-green" style="padding: 12px 24px; border-radius: var(--radius); font-weight: 700;">Subscribe</button>
+      </form>
+      <div id="newsletterMsg" style="margin-top: 14px; font-weight: 600; font-size: 0.88rem; display: none;"></div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer id="footer" class="footer"></footer>
+
+  <script src="/js/main.js"></script>
+  <script>
+    // Load stats
+    async function loadStats() {
+      // Use projects & posts counts from public endpoints
+      const [proj, posts] = await Promise.all([
+        apiFetch('/projects'),
+        apiFetch('/messages'),
+      ]);
+      const projData  = proj.data  || [];
+      const completed = projData.filter(p => p.status === 'completed').length;
+      const ongoing   = projData.filter(p => p.status === 'ongoing').length;
+
+      document.getElementById('statProjects').textContent  = projData.length;
+      document.getElementById('statCompleted').textContent = completed;
+      document.getElementById('statOngoing').textContent   = ongoing;
+      document.getElementById('statMessages').textContent  = (posts.total || posts.data?.length || '—');
+    }
+
+    // Load latest 3 posts
+    async function loadPosts() {
+      const grid = document.getElementById('postsGrid');
+      const data = await apiFetch('/posts?limit=3');
+      if (!data.success || !data.data.length) {
+        grid.innerHTML = '<div class="empty-state"><h3>No posts yet</h3><p>Check back soon for updates.</p></div>';
+        return;
+      }
+      grid.innerHTML = data.data.map(p => `
+        <article class="card">
+          <div class="card__image" style="background:var(--green-mid);color:rgba(255,255,255,0.3);font-size:2rem;"></div>
+          <div class="card__body">
+            <div class="post-card__date">${formatDate(p.created_at)}</div>
+            <h3 class="card__title">${p.title}</h3>
+            <p class="card__text">${truncate(stripHtml(p.content), 140)}</p>
+            <a href="news.html" class="card__link">Read more &rarr;</a>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    // Load latest 3 projects
+    async function loadProjects() {
+      const grid = document.getElementById('projectsGrid');
+      const data = await apiFetch('/projects');
+      if (!data.success || !data.data.length) {
+        grid.innerHTML = '<div class="empty-state"><h3>No projects yet</h3></div>';
+        return;
+      }
+      grid.innerHTML = data.data.slice(0, 3).map(p => `
+        <article class="card">
+          <div class="card__image" style="background:var(--green-mid);color:rgba(255,255,255,0.3);font-size:2rem;"></div>
+          <div class="card__body">
+            ${categoryTag(p.category)}
+            <h3 class="card__title">${p.title}</h3>
+            <p class="card__text">${truncate(p.description, 120)}</p>
+            <div class="card__meta">${p.location || 'Bunkpurugu Constituency'}</div>
+            <div style="margin-top:12px;">${statusBadge(p.status)}</div>
+          </div>
+        </article>
+      `).join('');
+    }
+
+    // Load hero background image from settings
+    async function loadHeroBackground() {
+      const data = await apiFetch('/settings/hero_image');
+      if (data?.success && data.value) {
+        const hero = document.getElementById('heroSection');
+        const overlay = document.getElementById('heroOverlay');
+        hero.style.backgroundImage = `url('${data.value}')`;
+        hero.style.backgroundSize = 'cover';
+        hero.style.backgroundPosition = 'center top';
+        hero.style.backgroundRepeat = 'no-repeat';
+        hero.classList.add('hero--has-image');
+        overlay.style.display = 'block';
+      }
+    }
+
+    function initNewsletter() {
+      const form = document.getElementById('newsletterForm');
+      if (!form) return;
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const emailInput = document.getElementById('newsletterEmail');
+        const msgEl = document.getElementById('newsletterMsg');
+        const email = emailInput.value.trim();
+        
+        msgEl.style.display = 'block';
+        msgEl.style.color = 'var(--text-light)';
+        msgEl.textContent = 'Subscribing...';
+        
+        const res = await apiFetch('/newsletter/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        
+        if (res?.success) {
+          msgEl.style.color = '#2e7d32'; // green
+          msgEl.textContent = res.message;
+          emailInput.value = '';
+        } else {
+          msgEl.style.color = '#c62828'; // red
+          msgEl.textContent = res?.message || 'Failed to subscribe.';
+        }
+        setTimeout(() => { msgEl.style.display = 'none'; }, 5000);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      loadHeroBackground();
+      loadStats();
+      loadPosts();
+      loadProjects();
+      initNewsletter();
+    });
+  </script>
+</body>
+</html>

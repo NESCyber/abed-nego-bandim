@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery — Dr. Abed-Nego Lamangin Bandim, MP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .gallery-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(220px,1fr)); gap:14px; }
+    .gallery-item { border-radius:var(--radius); overflow:hidden; aspect-ratio:4/3; cursor:pointer; box-shadow:var(--shadow-sm); transition:var(--transition); position:relative; background:var(--green-mid); display:flex; align-items:center; justify-content:center; }
+    .gallery-item:hover { transform:scale(1.03); box-shadow:var(--shadow-md); }
+    .gallery-item img { width:100%; height:100%; object-fit:cover; }
+    .gallery-placeholder { font-size:2.5rem; color:rgba(255,255,255,0.35); }
+    /* Lightbox */
+    .lightbox { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:3000; align-items:center; justify-content:center; }
+    .lightbox.open { display:flex; }
+    .lightbox__img { max-width:90vw; max-height:85vh; border-radius:var(--radius); box-shadow:var(--shadow-lg); }
+    .lightbox__close { position:absolute; top:20px; right:28px; background:none; color:white; font-size:2.5rem; transition:var(--transition); }
+    .lightbox__close:hover { color:var(--gold); }
+    .lightbox__caption { position:absolute; bottom:24px; left:50%; transform:translateX(-50%); color:rgba(255,255,255,0.7); font-size:0.9rem; }
+  </style>
+  <style>
+    /* ── FORCED NAVBAR FIX ── */
+    header#navbar,
+    header#navbar .navbar,
+    .navbar {
+      background-color: #0d2b1a !important;
+      background: #0d2b1a !important;
+    }
+    .navbar__inner {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      height: 70px !important;
+      max-width: 1140px !important;
+      margin: 0 auto !important;
+      padding: 0 20px !important;
+    }
+    .navbar__site-name { color: #ffffff !important; font-weight: 700 !important; }
+    .navbar__site-name span { color: #e8c97a !important; }
+    .navbar__links a { color: #ffffff !important; text-decoration: none !important; padding: 8px 14px !important; font-weight: 600 !important; }
+    .navbar__links a:hover { color: #e8c97a !important; }
+    .navbar__cta { background: #c9a84c !important; color: #0d2b1a !important; padding: 8px 18px !important; border-radius: 20px !important; font-weight: 700 !important; }
+    .navbar__logo { border-color: #c9a84c !important; color: #c9a84c !important; background: #1a4a2e !important; }
+    .navbar__hamburger span { background: #ffffff !important; }
+    .navbar__mobile-menu { background: #0d2b1a !important; }
+    .navbar__mobile-menu a { color: #ffffff !important; }
+  </style>
+</head>
+<body>
+  <header id="navbar"></header>
+
+  <div class="page-hero">
+    <h1>Media Gallery</h1>
+    <p>Photos and videos from projects, events, and community engagements.</p>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <!-- Filter -->
+      <div class="filter-bar" id="galleryFilter" style="margin-bottom:32px;">
+        <button class="filter-btn active" data-type="">All Media</button>
+        <button class="filter-btn" data-type="image">Photos</button>
+        <button class="filter-btn" data-type="video">Videos</button>
+      </div>
+
+      <div id="galleryGrid" class="gallery-grid">
+        <div class="loading-wrap" style="grid-column:1/-1"><div class="spinner"></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <button class="lightbox__close" id="lightboxClose">&times;</button>
+    <img class="lightbox__img" id="lightboxImg" src="" alt="">
+    <div class="lightbox__caption" id="lightboxCaption"></div>
+  </div>
+
+  <footer id="footer" class="footer"></footer>
+  <script src="/js/main.js"></script>
+  <script>
+    async function loadGallery(type = '') {
+      const grid = document.getElementById('galleryGrid');
+      grid.innerHTML = '<div class="loading-wrap" style="grid-column:1/-1"><div class="spinner"></div></div>';
+
+      const data = await apiFetch('/media' + (type ? `?type=${type}` : ''));
+      if (!data.success || !data.data.length) {
+        grid.innerHTML = `<div class="empty-state" style="grid-column:1/-1"><h3>No media yet</h3><p>Photos and videos will appear here.</p></div>`;
+        return;
+      }
+
+      grid.innerHTML = data.data.map(m => `
+        <div class="gallery-item" onclick="openLightbox('${m.file_url}','${m.caption || ''}','${m.type}')">
+          ${m.type === 'image'
+            ? `<img src="${m.file_url}" alt="${m.caption || 'Gallery image'}" loading="lazy">`
+            : `<div class="gallery-placeholder"><svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor" style="opacity:0.8;"><path d="M8 5v14l11-7z"/></svg></div>`
+          }
+        </div>
+      `).join('');
+    }
+
+    function openLightbox(url, caption, type) {
+      if (type !== 'image') return;
+      document.getElementById('lightboxImg').src =  url;
+      document.getElementById('lightboxCaption').textContent = caption;
+      document.getElementById('lightbox').classList.add('open');
+    }
+
+    document.getElementById('lightboxClose').onclick = () => document.getElementById('lightbox').classList.remove('open');
+    document.getElementById('lightbox').addEventListener('click', e => {
+      if (e.target === document.getElementById('lightbox')) document.getElementById('lightbox').classList.remove('open');
+    });
+
+    document.getElementById('galleryFilter').addEventListener('click', e => {
+      if (!e.target.classList.contains('filter-btn')) return;
+      document.querySelectorAll('#galleryFilter .filter-btn').forEach(b => b.classList.remove('active'));
+      e.target.classList.add('active');
+      loadGallery(e.target.dataset.type);
+    });
+
+    document.addEventListener('DOMContentLoaded', () => loadGallery());
+  </script>
+</body>
+</html>

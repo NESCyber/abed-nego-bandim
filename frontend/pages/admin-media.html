@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Media Manager — Admin Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/admin.css">
+  <style>
+    .media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 14px; }
+    .media-card {
+      background: var(--white); border: 1px solid var(--border);
+      border-radius: var(--radius); overflow: hidden;
+      transition: box-shadow 0.2s;
+    }
+    .media-card:hover { box-shadow: var(--shadow-md); }
+    .media-thumb {
+      aspect-ratio: 4/3; background: var(--cream);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2.5rem; color: var(--text-light); overflow: hidden;
+    }
+    .media-thumb img { width: 100%; height: 100%; object-fit: cover; }
+    .media-info { padding: 10px 12px; }
+    .media-info__type { font-size: 0.7rem; text-transform: uppercase; font-weight: 700; color: var(--text-light); letter-spacing: 0.05em; }
+    .media-info__caption { font-size: 0.82rem; color: var(--text-dark); margin: 3px 0 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .media-info__date { font-size: 0.75rem; color: var(--text-light); }
+    .media-actions { display: flex; gap: 6px; padding: 0 12px 12px; }
+    .upload-zone {
+      border: 2px dashed var(--border); border-radius: var(--radius);
+      padding: 40px 20px; text-align: center; cursor: pointer;
+      transition: all 0.2s; background: var(--cream); margin-bottom: 24px;
+    }
+    .upload-zone:hover, .upload-zone.dragover { border-color: var(--green-mid); background: #f0f7f4; }
+    .upload-zone__icon { font-size: 2.5rem; margin-bottom: 10px; }
+    .upload-zone p { color: var(--text-mid); font-size: 0.9rem; }
+    .upload-zone span { color: var(--green-mid); font-weight: 700; }
+    #fileInput { display: none; }
+    .progress-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin-top: 10px; display: none; }
+    .progress-bar__fill { height: 100%; background: var(--green-mid); width: 0; transition: width 0.3s; }
+  </style>
+  <style>
+    /* ── FORCED NAVBAR FIX ── */
+    header#navbar,
+    header#navbar .navbar,
+    .navbar {
+      background-color: #0d2b1a !important;
+      background: #0d2b1a !important;
+    }
+    .navbar__inner {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      height: 70px !important;
+      max-width: 1140px !important;
+      margin: 0 auto !important;
+      padding: 0 20px !important;
+    }
+    .navbar__site-name { color: #ffffff !important; font-weight: 700 !important; }
+    .navbar__site-name span { color: #e8c97a !important; }
+    .navbar__links a { color: #ffffff !important; text-decoration: none !important; padding: 8px 14px !important; font-weight: 600 !important; }
+    .navbar__links a:hover { color: #e8c97a !important; }
+    .navbar__cta { background: #c9a84c !important; color: #0d2b1a !important; padding: 8px 18px !important; border-radius: 20px !important; font-weight: 700 !important; }
+    .navbar__logo { border-color: #c9a84c !important; color: #c9a84c !important; background: #1a4a2e !important; }
+    .navbar__hamburger span { background: #ffffff !important; }
+    .navbar__mobile-menu { background: #0d2b1a !important; }
+    .navbar__mobile-menu a { color: #ffffff !important; }
+  </style>
+</head>
+<body>
+<div class="admin-layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <div class="admin-main">
+    <div class="topbar" id="topbar"></div>
+    <div class="admin-content">
+      <h2 style="font-size:1.2rem;font-weight:700;margin-bottom:20px;">Media Manager</h2>
+
+      <div id="alertBox" class="alert" style="display:none;"></div>
+
+      <!-- Upload zone -->
+      <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+        <div class="upload-zone__icon"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--green-light);"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/><polyline points="16 16 12 12 8 16"/></svg></div>
+        <p>Drag &amp; drop images or videos here, or <span>click to browse</span></p>
+        <p style="font-size:0.78rem;color:var(--text-light);margin-top:6px;">Supported: JPG, PNG, GIF, WebP, MP4, MOV. Max 10 MB.</p>
+        <input type="file" id="fileInput" accept="image/*,video/*" onchange="handleFileSelect(event)">
+        <div class="progress-bar" id="progressBar"><div class="progress-bar__fill" id="progressFill"></div></div>
+      </div>
+
+      <!-- Caption input (shown after file select) -->
+      <div id="captionRow" style="display:none;margin-bottom:16px;">
+        <div style="display:flex;gap:10px;align-items:center;">
+          <input class="form-input" type="text" id="captionInput" placeholder="Optional caption for this file…" style="flex:1;">
+          <button class="btn btn-primary" onclick="uploadFile()" id="uploadBtn">Upload</button>
+          <button class="btn btn-outline" onclick="cancelUpload()">Cancel</button>
+        </div>
+      </div>
+
+      <!-- Filter -->
+      <div style="display:flex;gap:10px;margin-bottom:16px;">
+        <button class="btn btn-outline btn-sm active" id="filterAll"   onclick="applyFilter('',this)">All</button>
+        <button class="btn btn-outline btn-sm"        id="filterImage" onclick="applyFilter('image',this)">Images</button>
+        <button class="btn btn-outline btn-sm"        id="filterVideo" onclick="applyFilter('video',this)">Videos</button>
+      </div>
+
+      <div id="mediaGrid" class="media-grid">
+        <div class="loading-wrap" style="grid-column:1/-1"><div class="spinner"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="modal-overlay" id="lightbox" onclick="closeLightbox()">
+  <img id="lightboxImg" src="" alt="" style="max-width:90vw;max-height:85vh;border-radius:8px;">
+</div>
+
+<script src="/js/admin.js"></script>
+<script>
+  const API_BASE = '';
+  let selectedFile = null;
+  let activeType   = '';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    injectAdminShell('media');
+    document.getElementById('topbarTitle').textContent = 'Media Manager';
+    loadMedia();
+    setupDragDrop();
+  });
+
+  function setupDragDrop() {
+    const zone = document.getElementById('uploadZone');
+    zone.addEventListener('dragover',  e => { e.preventDefault(); zone.classList.add('dragover'); });
+    zone.addEventListener('dragleave', () => zone.classList.remove('dragover'));
+    zone.addEventListener('drop', e => {
+      e.preventDefault();
+      zone.classList.remove('dragover');
+      const file = e.dataTransfer.files[0];
+      if (file) prepareUpload(file);
+    });
+  }
+
+  function handleFileSelect(e) {
+    const file = e.target.files[0];
+    if (file) prepareUpload(file);
+  }
+
+  function prepareUpload(file) {
+    selectedFile = file;
+    document.getElementById('captionRow').style.display = 'flex';
+    document.getElementById('captionInput').placeholder = `Caption for: ${file.name}`;
+    document.getElementById('captionInput').focus();
+  }
+
+  function cancelUpload() {
+    selectedFile = null;
+    document.getElementById('captionRow').style.display = 'none';
+    document.getElementById('fileInput').value = '';
+  }
+
+  async function uploadFile() {
+    if (!selectedFile) return;
+    const btn = document.getElementById('uploadBtn');
+    const bar = document.getElementById('progressBar');
+    const fill = document.getElementById('progressFill');
+
+    btn.disabled = true; btn.textContent = 'Uploading…';
+    bar.style.display = 'block';
+    fill.style.width  = '30%';
+
+    const formData = new FormData();
+    formData.append('file', selectedFile);
+    formData.append('caption', document.getElementById('captionInput').value.trim());
+
+    fill.style.width = '70%';
+    const res = await authUpload('/media', formData);
+    fill.style.width = '100%';
+
+    setTimeout(() => { bar.style.display = 'none'; fill.style.width = '0'; }, 600);
+    btn.disabled = false; btn.textContent = 'Upload';
+
+    showAlert(document.getElementById('alertBox'), res?.success ? 'success' : 'danger', res?.message || 'Upload failed.');
+    if (res?.success) { cancelUpload(); loadMedia(); }
+  }
+
+  async function loadMedia(type = '') {
+    const grid = document.getElementById('mediaGrid');
+    grid.innerHTML = '<div class="loading-wrap" style="grid-column:1/-1"><div class="spinner"></div></div>';
+    const data = await authFetch('/media' + (type ? `?type=${type}` : ''));
+    if (!data?.success || !data.data.length) {
+      grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1"><h3>No media yet</h3><p>Upload your first file above.</p></div>';
+      return;
+    }
+    grid.innerHTML = data.data.map(m => `
+      <div class="media-card">
+        <div class="media-thumb" onclick="${m.type==='image'?`openLightbox('${API_BASE}${m.file_url}')`:''}">
+          ${m.type === 'image'
+            ? `<img src="${API_BASE}${m.file_url}" alt="${m.caption || ''}" loading="lazy">`
+            : `<span><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="opacity:0.6;"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg></span>`}
+        </div>
+        <div class="media-info">
+          <div class="media-info__type">${m.type}</div>
+          <div class="media-info__caption">${m.caption || '(no caption)'}</div>
+          <div class="media-info__date">${formatDate(m.uploaded_at)}</div>
+        </div>
+        <div class="media-actions">
+          <button class="btn btn-outline btn-sm" onclick="copyUrl('${API_BASE}${m.file_url}')">Copy URL</button>
+          <button class="btn btn-danger btn-sm"  onclick="deleteMedia(${m.id})">Delete</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function applyFilter(type, el) {
+    activeType = type;
+    document.querySelectorAll('#mediaGrid ~ div .btn, .admin-content .btn-outline.btn-sm').forEach(b => b.classList.remove('active'));
+    el.classList.add('active');
+    loadMedia(type);
+  }
+
+  function copyUrl(url) {
+    navigator.clipboard.writeText(url).then(() => {
+      showAlert(document.getElementById('alertBox'), 'success', 'URL copied to clipboard!');
+    });
+  }
+
+  async function deleteMedia(id) {
+    if (!confirm('Delete this media file? This cannot be undone.')) return;
+    const res = await authFetch(`/media/${id}`, { method: 'DELETE' });
+    showAlert(document.getElementById('alertBox'), res?.success ? 'success' : 'danger', res?.message);
+    if (res?.success) loadMedia(activeType);
+  }
+
+  function openLightbox(src) {
+    document.getElementById('lightboxImg').src = src;
+    document.getElementById('lightbox').classList.add('open');
+  }
+  function closeLightbox() { document.getElementById('lightbox').classList.remove('open'); }
+</script>
+</body>
+</html>

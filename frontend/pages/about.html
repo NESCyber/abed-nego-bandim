@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About — Dr. Abed-Nego Lamangin Bandim, MP</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    .about-grid { display: grid; grid-template-columns: 340px 1fr; gap: 48px; align-items: start; }
+    .about-photo { border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-lg); }
+    .about-sidebar { position: sticky; top: 90px; z-index: 10; }
+    .about-photo-placeholder {
+      width: 100%; aspect-ratio: 3/4; background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      color: rgba(255,255,255,0.5); font-size: 5rem; gap: 12px;
+    }
+    .about-photo-placeholder p { font-size: 0.9rem; font-family: var(--font-body); }
+    .about-photo img { width: 100%; display: block; }
+    .about-content h2 { font-family: var(--font-head); font-size: 1.9rem; color: var(--green-dark); margin-bottom: 16px; }
+    .about-content p  { color: var(--text-mid); line-height: 1.9; margin-bottom: 16px; font-size: 0.97rem; }
+    .info-card { background: var(--cream); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 24px; }
+    .info-card h3 { font-family: var(--font-head); color: var(--green-dark); margin-bottom: 14px; font-size: 1.1rem; }
+    .info-row { display: flex; align-items: flex-start; gap: 12px; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+    .info-row:last-child { border-bottom: none; }
+    .info-row__icon { font-size: 1.1rem; min-width: 22px; }
+    .info-row__label { color: var(--text-light); font-weight: 600; min-width: 120px; }
+    .info-row__value { color: var(--text-dark); }
+    .timeline { position: relative; padding-left: 24px; }
+    .timeline::before { content:''; position:absolute; left:0; top:6px; bottom:6px; width:2px; background: var(--green-light); border-radius:2px; }
+    .timeline-item { position: relative; margin-bottom: 28px; }
+    .timeline-item::before { content:''; position:absolute; left:-28px; top:6px; width:10px; height:10px; border-radius:50%; background: var(--green-mid); border: 2px solid var(--white); box-shadow: 0 0 0 2px var(--green-mid); }
+    .timeline-item h4 { font-weight: 700; color: var(--green-dark); font-size: 0.95rem; }
+    .timeline-item__year { font-size: 0.8rem; color: var(--gold); font-weight: 700; margin-bottom: 4px; }
+    .timeline-item p { font-size: 0.88rem; color: var(--text-mid); margin-top: 4px; }
+    .committee-list { display: flex; flex-direction: column; gap: 10px; }
+    .committee-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--white); border-radius: var(--radius); border: 1px solid var(--border); font-size: 0.9rem; color: var(--text-dark); }
+    .committee-item::before { content: '•'; font-size: 1.2rem; color: var(--gold); }
+    @media(max-width:768px) { .about-grid { grid-template-columns: 1fr; } .about-sidebar { position: static; } }
+  </style>
+  <style>
+    /* ── FORCED NAVBAR FIX ── */
+    header#navbar,
+    header#navbar .navbar,
+    .navbar {
+      background-color: #0d2b1a !important;
+      background: #0d2b1a !important;
+    }
+    .navbar__inner {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      height: 70px !important;
+      max-width: 1140px !important;
+      margin: 0 auto !important;
+      padding: 0 20px !important;
+    }
+    .navbar__site-name { color: #ffffff !important; font-weight: 700 !important; }
+    .navbar__site-name span { color: #e8c97a !important; }
+    .navbar__links a { color: #ffffff !important; text-decoration: none !important; padding: 8px 14px !important; font-weight: 600 !important; }
+    .navbar__links a:hover { color: #e8c97a !important; }
+    .navbar__cta { background: #c9a84c !important; color: #0d2b1a !important; padding: 8px 18px !important; border-radius: 20px !important; font-weight: 700 !important; }
+    .navbar__logo { border-color: #c9a84c !important; color: #c9a84c !important; background: #1a4a2e !important; }
+    .navbar__hamburger span { background: #ffffff !important; }
+    .navbar__mobile-menu { background: #0d2b1a !important; }
+    .navbar__mobile-menu a { color: #ffffff !important; }
+  </style>
+</head>
+<body>
+  <header id="navbar"></header>
+
+  <div class="page-hero">
+    <h1>About Dr. Bandim</h1>
+    <p>Member of Parliament for Bunkpurugu Constituency</p>
+  </div>
+
+  <section class="section">
+    <div class="container">
+      <div class="about-grid">
+
+        <!-- Photo + quick info -->
+        <div class="about-sidebar">
+          <div class="about-photo">
+            <img src="/mp-photo.jpg" alt="Hon. Dr. Abed-Nego Lamangin Bandim" style="width: 100%; display: block; object-fit: cover;">
+          </div>
+
+          <div class="info-card" style="margin-top:24px;">
+            <h3>Quick Facts</h3>
+            <div class="info-row"><span class="info-row__label">Hometown</span><span class="info-row__value">Nakpanduri</span></div>
+            <div class="info-row"><span class="info-row__label">Constituency</span><span class="info-row__value">Bunkpurugu</span></div>
+            <div class="info-row"><span class="info-row__label">Political Party</span><span class="info-row__value">National Democratic Congress (NDC)</span></div>
+            <div class="info-row"><span class="info-row__label">Born</span><span class="info-row__value">Saturday, 12th February, 1977</span></div>
+            <div class="info-row"><span class="info-row__label">Religion</span><span class="info-row__value">Christian</span></div>
+            <div class="info-row"><span class="info-row__label">Email</span><span class="info-row__value"><a href="mailto:baazumah@parliament.gh" style="color:var(--green-mid);font-weight:600;">baazumah@parliament.gh</a></span></div>
+            <div class="info-row"><span class="info-row__label">Telephone</span><span class="info-row__value">+233 302 633 030 Ext 4124</span></div>
+            <div class="info-row"><span class="info-row__label">Parliaments</span><span class="info-row__value">8th Parliament</span></div>
+          </div>
+        </div>
+
+        <!-- Biography & details -->
+        <div class="about-content">
+          <div class="section__tag">Biography</div>
+          <h2>A Servant Leader of Bunkpurugu</h2>
+          <p>
+            Hon. Dr. Abed-Nego Lamangin Bandim is a distinguished scholar, administrator, and dedicated public servant representing the Bunkpurugu Constituency in the Parliament of Ghana. Center to the National Democratic Congress (NDC), Dr. Bandim is deeply committed to leveraging technology, improved infrastructure, and strong advocacy to drive socio-economic development across Bunkpurugu and the broader North East Region.
+          </p>
+          <p>
+            With a professional background spanning telecommunications regulation, academic research, and leadership in higher education, Dr. Bandim brings a wealth of policy and managerial expertise to public governance. As the Chairperson of the Information and Communications Committee in Parliament, he actively guides key legislative issues shaping the future of Ghana's digital economy.
+          </p>
+
+          <!-- Education -->
+          <div class="info-card">
+            <h3>Education</h3>
+            <div class="timeline">
+              <div class="timeline-item">
+                <div class="timeline-item__year">May 2023</div>
+                <h4>Doctor of Philosophy (PhD)</h4>
+                <p>University of Pretoria, South Africa</p>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-item__year">May 2011</div>
+                <h4>Diploma</h4>
+                <p>Commonwealth Telecommunication Org.</p>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-item__year">Nov 2006</div>
+                <h4>Masters of Laws (LLM)</h4>
+                <p>Robert Gordon University (RGU), Scotland</p>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-item__year">Nov 2001</div>
+                <h4>A Level — Business Certificate</h4>
+                <p>Private Candidate</p>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-item__year">Nov 1998</div>
+                <h4>O Level — Economics</h4>
+                <p>Private Candidate</p>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-item__year">Nov 1995</div>
+                <h4>WAEC — Business Management</h4>
+                <p>Business Secondary School</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Career -->
+          <div class="info-card">
+            <h3>Employment History</h3>
+            <div class="timeline">
+              <div class="timeline-item">
+                <div class="timeline-item__year">Present</div>
+                <h4>Member of Parliament</h4>
+                <p>Parliament of Ghana</p>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-item__year">Prior</div>
+                <h4>Chief Manager</h4>
+                <p>National Communication Authority (NCA)</p>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-item__year">Prior</div>
+                <h4>Research Assistant</h4>
+                <p>Robert Gordon University (RGU) Business School</p>
+              </div>
+              <div class="timeline-item">
+                <div class="timeline-item__year">Prior</div>
+                <h4>Students' President</h4>
+                <p>Robert Gordon University (RGU) Student Union</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Committees -->
+          <div class="info-card">
+            <h3>Parliamentary Committee Membership</h3>
+            <div class="committee-list">
+              <div class="committee-item"><strong>Chairperson</strong> — Information and Communications Committee</div>
+              <div class="committee-item"><strong>Member</strong> — Public Administration and State Interests Committee</div>
+              <div class="committee-item"><strong>Member</strong> — Subsidiary Legislation Committee</div>
+            </div>
+          </div>
+
+          <!-- Vision -->
+          <div class="info-card" style="background: linear-gradient(135deg, var(--green-dark), var(--green-mid)); color: white; border: none;">
+            <h3 style="color:var(--gold);">Vision for Bunkpurugu</h3>
+            <p style="color:rgba(255,255,255,0.88); line-height:1.8; margin:0; font-size:0.95rem;">
+              "My vision is a Bunkpurugu Constituency where every child has access to quality education, every family has access to clean water and healthcare, every farmer can reach their market through good roads, and every young person has the skills and opportunities to build a bright future — right here at home."
+            </p>
+            <p style="color:var(--gold-light); margin-top:12px; font-style:italic; font-size:0.85rem;">— Dr. Abed-Nego Lamangin Bandim, MP</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <footer id="footer" class="footer"></footer>
+  <script src="/js/main.js"></script>
+</body>
+</html>

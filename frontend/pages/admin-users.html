@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Users — Admin Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/admin.css">
+  <style>
+    /* ── FORCED NAVBAR FIX ── */
+    header#navbar,
+    header#navbar .navbar,
+    .navbar {
+      background-color: #0d2b1a !important;
+      background: #0d2b1a !important;
+    }
+    .navbar__inner {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      height: 70px !important;
+      max-width: 1140px !important;
+      margin: 0 auto !important;
+      padding: 0 20px !important;
+    }
+    .navbar__site-name { color: #ffffff !important; font-weight: 700 !important; }
+    .navbar__site-name span { color: #e8c97a !important; }
+    .navbar__links a { color: #ffffff !important; text-decoration: none !important; padding: 8px 14px !important; font-weight: 600 !important; }
+    .navbar__links a:hover { color: #e8c97a !important; }
+    .navbar__cta { background: #c9a84c !important; color: #0d2b1a !important; padding: 8px 18px !important; border-radius: 20px !important; font-weight: 700 !important; }
+    .navbar__logo { border-color: #c9a84c !important; color: #c9a84c !important; background: #1a4a2e !important; }
+    .navbar__hamburger span { background: #ffffff !important; }
+    .navbar__mobile-menu { background: #0d2b1a !important; }
+    .navbar__mobile-menu a { color: #ffffff !important; }
+  </style>
+</head>
+<body>
+<div class="admin-layout">
+  <aside class="sidebar" id="sidebar"></aside>
+  <div class="admin-main">
+    <div class="topbar" id="topbar"></div>
+    <div class="admin-content">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+        <h2 style="font-size:1.2rem;font-weight:700;">Admin Users</h2>
+        <button class="btn btn-primary" onclick="openModal()" id="addUserBtn" style="display:none;">+ Add Admin</button>
+      </div>
+
+      <div class="alert alert-danger" style="margin-bottom:16px;" id="accessWarning">
+        Only Super Admins can manage admin users.
+      </div>
+
+      <div id="alertBox" class="alert" style="display:none;"></div>
+
+      <div class="panel">
+        <div id="usersTable"><div class="loading-wrap"><div class="spinner"></div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add / Edit User Modal -->
+<div class="modal-overlay" id="userModal">
+  <div class="modal" style="max-width:480px;">
+    <div class="modal__header">
+      <div class="modal__title" id="modalTitle">Add Admin User</div>
+      <button class="modal__close" onclick="closeModal()">&times;</button>
+    </div>
+    <div class="modal__body">
+      <div id="modalAlert" class="alert" style="display:none;"></div>
+      <form id="userForm">
+        <input type="hidden" id="userId">
+        <div class="form-group">
+          <label class="form-label" for="uName">Full Name <span>*</span></label>
+          <input class="form-input" type="text" id="uName" placeholder="Admin's full name" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="uEmail">Email Address <span>*</span></label>
+          <input class="form-input" type="email" id="uEmail" placeholder="email@example.com" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="uRole">Role <span>*</span></label>
+          <select class="form-select" id="uRole">
+            <option value="editor">Editor</option>
+            <option value="super_admin">Super Admin</option>
+          </select>
+          <div class="form-hint">Editors can manage content. Super Admins can also manage users.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="uPassword">Password <span id="pwdRequired">*</span></label>
+          <input class="form-input" type="password" id="uPassword" placeholder="Minimum 8 characters" autocomplete="new-password">
+          <div class="form-hint" id="pwdHint">Leave blank to keep existing password (when editing).</div>
+        </div>
+      </form>
+    </div>
+    <div class="modal__footer">
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveUser()" id="saveBtn">Save User</button>
+    </div>
+  </div>
+</div>
+
+<script src="/js/admin.js"></script>
+<script>
+  const currentUser = getUser();
+
+  document.addEventListener('DOMContentLoaded', () => {
+    injectAdminShell('users');
+    document.getElementById('topbarTitle').textContent = 'Admin Users';
+
+    if (currentUser.role === 'super_admin') {
+      document.getElementById('accessWarning').style.display = 'none';
+      document.getElementById('addUserBtn').style.display = 'inline-flex';
+      loadUsers();
+    } else {
+      document.getElementById('usersTable').innerHTML = '<div class="empty-state"><h3>Access restricted</h3><p>Contact a Super Admin for help.</p></div>';
+    }
+  });
+
+  async function loadUsers() {
+    const el = document.getElementById('usersTable');
+    el.innerHTML = '<div class="loading-wrap"><div class="spinner"></div></div>';
+    const data = await authFetch('/users');
+    if (!data?.success || !data.data.length) {
+      el.innerHTML = '<div class="empty-state"><h3>No users found</h3></div>';
+      return;
+    }
+    el.innerHTML = `<table class="data-table">
+      <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Created</th><th>Actions</th></tr></thead>
+      <tbody>
+        ${data.data.map(u => `<tr>
+          <td><strong>${u.name}</strong> ${u.id === currentUser.id ? '<span style="font-size:0.72rem;color:var(--green-mid);font-weight:700;">(You)</span>' : ''}</td>
+          <td>${u.email}</td>
+          <td>
+            <span class="badge ${u.role==='super_admin'?'badge-published':'badge-draft'}">
+              ${u.role === 'super_admin' ? 'Super Admin' : 'Editor'}
+            </span>
+          </td>
+          <td>${formatDate(u.created_at)}</td>
+          <td style="display:flex;gap:6px;">
+            <button class="btn btn-outline btn-sm" onclick="editUser(${u.id},'${u.name.replace(/'/g,"\\'")}','${u.email}','${u.role}')">Edit</button>
+            ${u.id !== currentUser.id
+              ? `<button class="btn btn-danger btn-sm" onclick="deleteUser(${u.id},'${u.name.replace(/'/g,"\\'")}')">Delete</button>`
+              : ''}
+          </td>
+        </tr>`).join('')}
+      </tbody>
+    </table>`;
+  }
+
+  function openModal(user = null) {
+    document.getElementById('userId').value   = user?.id || '';
+    document.getElementById('uName').value    = user?.name || '';
+    document.getElementById('uEmail').value   = user?.email || '';
+    document.getElementById('uRole').value    = user?.role || 'editor';
+    document.getElementById('uPassword').value = '';
+    document.getElementById('modalTitle').textContent = user ? 'Edit Admin User' : 'Add Admin User';
+    document.getElementById('modalAlert').style.display = 'none';
+
+    // When editing, password is optional
+    const isEdit = !!user;
+    document.getElementById('pwdRequired').textContent = isEdit ? '' : '*';
+    document.getElementById('pwdHint').style.display   = isEdit ? 'block' : 'none';
+    document.getElementById('uEmail').disabled          = isEdit; // prevent email changes
+    document.getElementById('userModal').classList.add('open');
+  }
+
+  function editUser(id, name, email, role) {
+    openModal({ id, name, email, role });
+  }
+
+  function closeModal() { document.getElementById('userModal').classList.remove('open'); }
+
+  async function saveUser() {
+    const id  = document.getElementById('userId').value;
+    const pwd = document.getElementById('uPassword').value;
+
+    if (!id && !pwd) { showAlert(document.getElementById('modalAlert'), 'danger', 'Password is required for new users.'); return; }
+    if (pwd && pwd.length < 8) { showAlert(document.getElementById('modalAlert'), 'danger', 'Password must be at least 8 characters.'); return; }
+
+    const payload = {
+      name: document.getElementById('uName').value.trim(),
+      role: document.getElementById('uRole').value,
+    };
+    if (!id) payload.email = document.getElementById('uEmail').value.trim();
+    if (pwd) payload.password = pwd;
+
+    const btn = document.getElementById('saveBtn');
+    btn.disabled = true; btn.textContent = 'Saving…';
+
+    const res = await authFetch(id ? `/users/${id}` : '/users', {
+      method: id ? 'PUT' : 'POST',
+      body: JSON.stringify(payload),
+    });
+
+    btn.disabled = false; btn.textContent = 'Save User';
+
+    if (res?.success) {
+      closeModal();
+      showAlert(document.getElementById('alertBox'), 'success', res.message);
+      loadUsers();
+    } else {
+      showAlert(document.getElementById('modalAlert'), 'danger', res?.message || 'Error saving user.');
+    }
+  }
+
+  async function deleteUser(id, name) {
+    if (!confirmDelete(name)) return;
+    const res = await authFetch(`/users/${id}`, { method: 'DELETE' });
+    showAlert(document.getElementById('alertBox'), res?.success ? 'success' : 'danger', res?.message);
+    if (res?.success) loadUsers();
+  }
+</script>
+</body>
+</html>
