@@ -31,13 +31,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ── Serve ENTIRE frontend from the backend ────────────────────
-// Access everything at http://localhost:3000  (no CORS issues)
-const frontendPages = path.join(__dirname, '..', 'frontend', 'pages');
 const frontendRoot  = path.join(__dirname, '..', 'frontend');
-
-app.use(express.static(frontendPages));              // serves HTML pages
-app.use('/css', express.static(path.join(frontendRoot, 'css')));  // serves CSS
-app.use('/js',  express.static(path.join(frontendRoot, 'js')));   // serves JS
+app.use(express.static(frontendRoot));              // serves HTML pages, CSS, and JS
 
 // ── Rate limiting ─────────────────────────────────────────────
 app.use('/api', rateLimit({
