@@ -30,8 +30,7 @@ const pool = mysql.createPool(poolConfig);
     console.log('✅  MySQL connected successfully');
     conn.release();
   } catch (err) {
-    console.error('❌  MySQL connection failed:', err);
-    process.exit(1);
+    console.error('❌  MySQL connection failed on startup. The server is still running, but database features will fail until database credentials are set correctly in Render:', err);
   }
 })();
 
