@@ -4,7 +4,7 @@
 const mysql = require('mysql2/promise');
 require('dotenv').config();
 
-const pool = mysql.createPool({
+const poolConfig = {
   host:               process.env.DB_HOST     || 'localhost',
   port:               process.env.DB_PORT     || 3306,
   user:               process.env.DB_USER     || 'root',
@@ -14,7 +14,14 @@ const pool = mysql.createPool({
   connectionLimit:    10,
   queueLimit:         0,
   charset:            'utf8mb4',
-});
+};
+
+// Enable SSL if configured (required by Aiven/Clever Cloud/Tidb)
+if (process.env.DB_SSL === 'true') {
+  poolConfig.ssl = { rejectUnauthorized: false };
+}
+
+const pool = mysql.createPool(poolConfig);
 
 // Test connection on startup
 (async () => {
@@ -23,7 +30,7 @@ const pool = mysql.createPool({
     console.log('✅  MySQL connected successfully');
     conn.release();
   } catch (err) {
-    console.error('❌  MySQL connection failed:', err.message);
+    console.error('❌  MySQL connection failed:', err);
     process.exit(1);
   }
 })();
