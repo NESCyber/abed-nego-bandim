@@ -4,7 +4,10 @@ if (savedTheme === 'dark') {
   document.body.classList.add('dark-theme');
 }
 
-const API = '/api';
+const BACKEND_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+  ? 'http://localhost:4000'
+  : 'https://abed-nego-bandim.onrender.com';
+const API = BACKEND_URL + '/api';
 
 /* ── Navbar active link ────────────────────────────────────── */
 document.addEventListener('DOMContentLoaded', () => {
