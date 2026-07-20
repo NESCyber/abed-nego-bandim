@@ -31,7 +31,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // ── Serve uploaded media files ────────────────────────────────
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 // ── Serve ENTIRE frontend from the backend ────────────────────
 const frontendRoot  = path.join(__dirname, '..', 'frontend');

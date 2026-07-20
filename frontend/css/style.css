@@ -133,6 +133,9 @@ button { cursor: pointer; font-family: var(--font-body); border: none; }
   z-index: 0;
   display: none;
 }
+.hero--has-image .hero__overlay {
+  display: block;
+}
 .hero__inner { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; }
 .hero__badge {
   display: inline-block; background: rgba(201,168,76,0.2);
