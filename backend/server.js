@@ -20,6 +20,9 @@ const newsletterRoutes = require('./routes/newsletter');
 const app  = express();
 const PORT = process.env.PORT || 3000;
 
+// ── Trust Proxy: required for rate-limiting behind Render/PaaS load balancers ──
+app.set('trust proxy', 1);
+
 // ── CORS: open for all origins (works for any local setup) ────
 app.use(cors({ origin: true, credentials: true }));
 

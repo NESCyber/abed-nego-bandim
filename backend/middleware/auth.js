@@ -15,7 +15,7 @@ function authenticate(req, res, next) {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'bandim_constituency_default_secret_key_2026');
     req.user = decoded; // { id, name, email, role }
     next();
   } catch (err) {
