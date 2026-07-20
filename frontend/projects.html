@@ -57,22 +57,29 @@
   <section class="section">
     <div class="container">
 
-      <!-- Filter bar -->
-      <div class="filter-bar" id="filterBar">
-        <button class="filter-btn active" data-filter="">All Projects</button>
-        <button class="filter-btn" data-filter="health">Health</button>
-        <button class="filter-btn" data-filter="education">Education</button>
-        <button class="filter-btn" data-filter="infrastructure">Infrastructure</button>
-        <button class="filter-btn" data-filter="ict">ICT</button>
-        <button class="filter-btn" data-filter="other">Other</button>
-      </div>
+      <!-- Project Filters Panel -->
+      <div class="project-filters">
+        <div class="filter-group">
+          <span class="filter-label">Category:</span>
+          <div class="filter-bar" id="filterBar">
+            <button class="filter-btn active" data-filter="">All Projects</button>
+            <button class="filter-btn" data-filter="health">Health</button>
+            <button class="filter-btn" data-filter="education">Education</button>
+            <button class="filter-btn" data-filter="infrastructure">Infrastructure</button>
+            <button class="filter-btn" data-filter="ict">ICT</button>
+            <button class="filter-btn" data-filter="other">Other</button>
+          </div>
+        </div>
 
-      <!-- Status filter -->
-      <div class="filter-bar" id="statusBar" style="margin-bottom: 36px;">
-        <button class="filter-btn active" data-status="">All Statuses</button>
-        <button class="filter-btn" data-status="ongoing">Ongoing</button>
-        <button class="filter-btn" data-status="completed">Completed</button>
-        <button class="filter-btn" data-status="planned">Planned</button>
+        <div class="filter-group">
+          <span class="filter-label">Status:</span>
+          <div class="filter-bar" id="statusBar">
+            <button class="filter-btn active" data-status="">All Statuses</button>
+            <button class="filter-btn" data-status="ongoing">Ongoing</button>
+            <button class="filter-btn" data-status="completed">Completed</button>
+            <button class="filter-btn" data-status="planned">Planned</button>
+          </div>
+        </div>
       </div>
 
       <div id="projectsGrid" class="card-grid">

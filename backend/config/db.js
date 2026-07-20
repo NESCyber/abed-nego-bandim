@@ -11,7 +11,7 @@ const poolConfig = {
   password:           process.env.DB_PASSWORD || '',
   database:           process.env.DB_NAME     || 'mp_website',
   waitForConnections: true,
-  connectionLimit:    10,
+  connectionLimit:    100,
   queueLimit:         0,
   charset:            'utf8mb4',
 };

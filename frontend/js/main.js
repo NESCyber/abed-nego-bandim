@@ -5,24 +5,9 @@ if (savedTheme === 'dark') {
 }
 
 const BACKEND_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-  ? 'http://localhost:4000'
+  ? 'http://localhost:3000'
   : 'https://abed-nego-bandim.onrender.com';
 const API = BACKEND_URL + '/api';
-
-/* ── Navbar active link ────────────────────────────────────── */
-document.addEventListener('DOMContentLoaded', () => {
-  const path = window.location.pathname.split('/').pop() || 'index.html';
-  document.querySelectorAll('.navbar__links a, .navbar__mobile-menu a').forEach(a => {
-    if (a.getAttribute('href') === path) a.classList.add('active');
-  });
-
-  /* Mobile hamburger */
-  const ham  = document.getElementById('hamburger');
-  const menu = document.getElementById('mobileMenu');
-  if (ham && menu) {
-    ham.addEventListener('click', () => menu.classList.toggle('open'));
-  }
-});
 
 /* ── API helper ────────────────────────────────────────────── */
 async function apiFetch(endpoint, options = {}) {
@@ -116,6 +101,22 @@ function injectNavbar() {
       </button>
     </nav>
   `;
+
+  /* Highlight active page */
+  const path = window.location.pathname.split('/').pop() || 'index.html';
+  nav.querySelectorAll('.navbar__links a, .navbar__mobile-menu a').forEach(a => {
+    if (a.getAttribute('href') === path) a.classList.add('active');
+  });
+
+  /* Mobile hamburger click event */
+  const ham  = nav.querySelector('#hamburger');
+  const menu = nav.querySelector('#mobileMenu');
+  if (ham && menu) {
+    ham.addEventListener('click', () => {
+      menu.classList.toggle('open');
+      ham.classList.toggle('active');
+    });
+  }
 }
 
 /* ── Footer HTML ───────────────────────────────────────────── */

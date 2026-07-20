@@ -31,7 +31,8 @@ CREATE TABLE IF NOT EXISTS posts (
   author_id    INT,
   created_at   DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at   DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE SET NULL
+  FOREIGN KEY (author_id) REFERENCES users(id) ON DELETE SET NULL,
+  INDEX idx_posts_status_created (status, created_at)
 );
 
 -- ─────────────────────────────────────────
@@ -48,7 +49,9 @@ CREATE TABLE IF NOT EXISTS projects (
   status       ENUM('planned', 'ongoing', 'completed') NOT NULL DEFAULT 'planned',
   image_url    VARCHAR(500),
   created_at   DATETIME DEFAULT CURRENT_TIMESTAMP,
-  updated_at   DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  updated_at   DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_projects_status (status),
+  INDEX idx_projects_category (category)
 );
 
 -- ─────────────────────────────────────────
@@ -63,7 +66,10 @@ CREATE TABLE IF NOT EXISTS messages (
   file_url     VARCHAR(500) NULL,
   status       ENUM('pending', 'in_progress', 'resolved') NOT NULL DEFAULT 'pending',
   created_at   DATETIME DEFAULT CURRENT_TIMESTAMP,
-  updated_at   DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+  updated_at   DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_messages_status (status),
+  INDEX idx_messages_category (category),
+  INDEX idx_messages_created_at (created_at)
 );
 
 -- ─────────────────────────────────────────

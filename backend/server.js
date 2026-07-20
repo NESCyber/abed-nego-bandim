@@ -36,12 +36,12 @@ app.use(express.static(frontendRoot));              // serves HTML pages, CSS, a
 
 // ── Rate limiting ─────────────────────────────────────────────
 app.use('/api', rateLimit({
-  windowMs: 15 * 60 * 1000, max: 500,
+  windowMs: 15 * 60 * 1000, max: 2000,
   standardHeaders: true, legacyHeaders: false,
   message: { success: false, message: 'Too many requests.' },
 }));
 app.use('/api/messages', rateLimit({
-  windowMs: 60 * 60 * 1000, max: 30,
+  windowMs: 60 * 60 * 1000, max: 100,
   message: { success: false, message: 'Too many submissions.' },
 }));
 
@@ -64,7 +64,7 @@ app.use('/api/newsletter', newsletterRoutes);
 
 // ── Catch-all: any unknown route → index.html ─────────────────
 app.get('*', (req, res) => {
-  res.sendFile(path.join(frontendPages, 'index.html'));
+  res.sendFile(path.join(frontendRoot, 'index.html'));
 });
 
 // ── Global error handler ──────────────────────────────────────
